@@ -6,7 +6,7 @@ class Coins
   PImage coinPic;
   PVector point1, target1;
   boolean itsMe;
-
+  Ani aniA;
   //constructor: used to initialize the variables.
   Coins(int startX, int startY)
   {
@@ -36,10 +36,27 @@ class Coins
   {
     coinPic.resize(sizeX, sizeY);
     image(coinPic, x, y);
+    aniA = new Ani(this, 2, "diaA", sizeX);
   }
 
   void isItMe(boolean flag)
   {
     itsMe = flag;
+  }
+  
+  boolean isHit(int mX, int mY, int sizeX, int sizeY)
+  {
+    if(mX >= point1.x && mX <= (point1.x + sizeX)
+    && mY >= point1.y && mY <= (point1.y + sizeY))
+    {
+      return true;  
+    }
+    return false;
+  }
+  
+  void changefilter(char c)
+  {
+    if(c == 'i')
+      coinPic.filter(INVERT);
   }
 }
