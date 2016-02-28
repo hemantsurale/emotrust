@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+
 public class model{
   //0-participant, 1-computer
   public int round;
@@ -6,8 +9,17 @@ public class model{
   public int[] ownCoin= new int[2];
   public int[] getCoin= new int[2];
   public int[] returnCoin = new int[2];
+  private PrintWriter  output;
+  private String filename = "";
   
   public model(){
+    //create logger
+    File f = new File(dataPath(filename));
+    if(!f.exists()){
+      createFile(f);
+    }
+    output = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
+    
     round = 0;
     
     for(int i=0;i<2;i++){
@@ -17,6 +29,19 @@ public class model{
     //set up current sate round info
     resetCoinInfo();
   }
+  
+  /**
+   * Creates a new file including all subfolders
+   */
+  private void createFile(File f){
+    File parentDir = f.getParentFile();
+    try{
+      parentDir.mkdirs(); 
+      f.createNewFile();
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+  }   
   
   private void resetCoinInfo(){
     for (int i=0;i<2;i++){
@@ -30,10 +55,14 @@ public class model{
     if(isReturnCoin){
       getCoin[id]-=numCoin;
       returnCoin[(id+1)%2]+=numCoin;
+      output.println("RETURN -- In round "+round+", Player "+id+" returns "+numCoin+" to Player"+((id+1)%2));
     }else{
       ownCoin[id]-=numCoin;
       getCoin[(id+1)%2]+=numCoin;
+      output.println("GIVE -- In round "+round+", Player "+id+" gives "+numCoin+" to Player"+((id+1)%2));
     }
+    output.println("STATUS -- Round: "+round+", Player: "+id+" owns: "+ownCoin[id]+", gets: "+getCoin[id]);
+    output.println();
   }
   
   public void updateScore(){
@@ -73,5 +102,9 @@ public class model{
     
     //TODO: determine emoji to send
     computerEmojiIndex = 0;
+  }
+  
+  public void closeLogger(){
+    output.close();
   }
 }
