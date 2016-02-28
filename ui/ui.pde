@@ -4,28 +4,28 @@ import de.looksgood.ani.easing.*;
 PImage bg, coins, gameName;       // image objects of canvas and coins
 PFont font;
 Coins[] c;              // object declaration
-int i1, j, dist = 50, x, size = 50;
+int i1, j, dist = ceil(0.03 * displayWidth), x, size = 50;
 int state;              // to maintain the game state
 void setup()
 {
   size(displayWidth, displayHeight); // fullscreen
-  Ani.init(this);       
+  Ani.init(this);           
   c = new Coins[20];    // object memory allocation
   // 10 coins in 1st row
   for (x = 0; x < 10; x++) 
   {
     c[x] = new Coins((int)(dist + displayWidth * 0.2), 
     (int)( displayHeight * 0.6));
-    dist += 50;
+    dist += ceil(0.03 * displayWidth);
     c[x].changefilter('i');
   }
-  dist = 50;
+  dist = 0;
   // 10 coins in 2nd row
   for (; x < 20; x++) 
   {
     c[x] = new Coins((int)(dist + displayWidth * 0.2), 
     (int)(100 + displayHeight * 0.6));
-    dist += 50;
+    dist += ceil(0.03 * displayWidth);
   }
   // laptop vs desktop
   if (displayWidth == 1680)
