@@ -4,18 +4,32 @@ import de.looksgood.ani.easing.*;
 PImage bg, coins, gameName;       // image objects of canvas and coins
 PFont font;
 Coins[] c;              // object declaration
-int i1, j, dist = ceil(0.03 * displayWidth), x, size = 50;
+Emotion[] e;
+int i1, j, dist = ceil(0.03 * displayWidth), x, size = 50, sizeofFace = 100;
 int state;              // to maintain the game state
+int time;
+
 void setup()
 {
   size(displayWidth, displayHeight); // fullscreen
   Ani.init(this);           
   c = new Coins[20];    // object memory allocation
+  e = new Emotion[20];
+
+  // 8 emotions in the emotion panel
+  for (x = 0; x < 8; x++) 
+  {
+    e[x] = new Emotion((int)(displayWidth * 0.03), 
+      (int)(2*dist + displayHeight * 0.1), "dispntd.png");
+    dist += ceil(0.03 * displayWidth);
+  }
+
+  dist = ceil(0.03 * displayWidth);
   // 10 coins in 1st row
   for (x = 0; x < 10; x++) 
   {
-    c[x] = new Coins((int)(dist + displayWidth * 0.2), 
-    (int)( displayHeight * 0.6));
+    c[x] = new Coins((int)(dist + displayWidth * 0.6), 
+      (int)( displayHeight * 0.6));
     dist += ceil(0.03 * displayWidth);
     c[x].changefilter('i');
   }
@@ -24,14 +38,13 @@ void setup()
   for (; x < 20; x++) 
   {
     c[x] = new Coins((int)(dist + displayWidth * 0.2), 
-    (int)(100 + displayHeight * 0.6));
+      (int)( displayHeight * 0.6));
     dist += ceil(0.03 * displayWidth);
   }
   // laptop vs desktop
-  if (displayWidth == 1680)
-    bg = loadImage("bkgrnd1.jpg");
-  else
-    bg = loadImage("bkgrnd.jpg");
+  //if (displayWidth == 1680)
+  bg = loadImage("bkgrnd1.jpg");
+  bg.resize(displayWidth, displayHeight);
   gameName = loadImage("emotrust.png");
   gameName.resize(800, 300);
   font  = loadFont("customs.vlw");
@@ -45,14 +58,14 @@ void draw()
   fill(255);
   image(gameName, displayWidth * 0.3, 0);
   textSize(35);
-  text("Coins recieved", (int)(50 + displayWidth * 0.15), 
-    (int)( displayHeight * 0.59)); 
+  text("Coins recieved", (int)(50 + displayWidth * 0.51), 
+    (int)(displayHeight * 0.61) - 30);
   text("Your coins", (int)(50 + displayWidth * 0.15), 
-    (int)(80 + displayHeight * 0.61)); 
-  
+    (int)(displayHeight * 0.61) - 30);
+
   // control movement here.
   //c[3].isItMe(false);
-  
+
   // draw coins
   noStroke();
   fill(255, 0, 0, 128);
@@ -61,24 +74,60 @@ void draw()
   stroke(255, 0, 0, 128);
   strokeWeight(2);
   noFill();
-  
+
   // update coin position
   for (i1 = 0; i1 < 20; i1++)
   {
     c[i1].point1.x = c[i1].target1.x;
     c[i1].point1.y = c[i1].target1.y;
   }
+
+  // emotion panel
+  fill(255, 120);
+  stroke(0, 0);
+  rect(20, 50, 
+    displayWidth * 0.1, displayHeight - 150);
+  for (j = 0; j < 8; j++)
+  {
+    e[j].draw(e[j].point1.x, e[j].point1.y, sizeofFace, sizeofFace);
+    if(e[j].isItMe() && (millis() - time) < 5000)
+    {
+      //image(e[j].emoPic,e[j].target1.x,e[j].target1.y,300,300);
+      Ani.to(e[j].emoPic, 5, "x:" + e[j].target1.x + ",y:" + e[j].target1.y + ",w:300,h:300", Ani.SINE_IN_OUT);
+    }
+  }
 }
 
 void mousePressed()
 {
+  time = millis();
   // do the coin hit-test here.
   for (j = 0; j<20; j++)
   {
     //if((sq(mouseX - c[j].point1.x) + sq(mouseY - c[j].point1.y)) < sq(30))
-    if(c[j].isHit(mouseX, mouseY, size, size))
-     c[j].isItMe(true);
+    if (c[j].isHit(mouseX, mouseY, size, size))
+      c[j].isItMe(true);
     else
       c[j].gotoXY(c[j].point1.x, c[j].point1.y, mouseX, mouseY);
+  }
+
+  // do the face hit-testing here.
+  // do the coin hit-test here.
+  for (j = 0; j<8; j++)
+  {
+    //if((sq(mouseX - c[j].point1.x) + sq(mouseY - c[j].point1.y)) < sq(30))
+    if (e[j].isHit(mouseX, mouseY, sizeofFace, sizeofFace))
+    {
+      e[j].ItzMe(true);
+      e[j].gotoXY(e[j].point1.x, e[j].point1.y, 
+        (int) (displayWidth * 0.4), (int)(displayHeight * 0.3));
+     //Ani.to(e[j].emoPic, 5, "x:" + e[j].target1.x + ",y:" + e[j].target1.y + ",w:300,h:300", Ani.SINE_IN_OUT);
+     //image(e[j].emoPic,e[j].target1.x,e[j].target1.y,300,300);
+    } 
+    else if(e[j].isItMe())
+    {
+      e[j].goBackToBase(sizeofFace, sizeofFace);
+      e[j].ItzMe(false);
+    }
   }
 }

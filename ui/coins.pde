@@ -2,7 +2,7 @@ class Coins
 {
   int id;
   int ht, wt;
-  boolean ggo;
+  boolean isSelected;
   PImage coinPic;
   PVector point1, target1;
   boolean itsMe;
@@ -12,7 +12,7 @@ class Coins
   {
     id = 0;
     ht = wt = 30;
-    ggo = false;
+    isSelected = false;
     point1 = new PVector(startX, startY);
     target1 = new PVector(startX, startY);
     coinPic = loadImage("coin.png");
@@ -23,10 +23,10 @@ class Coins
   {
     if (itsMe)
     {
-      ggo = true;
+      isSelected = true;
       target1.x = x;
       target1.y = y;
-      point1.x  = px; 
+      point1.x  = px;
       point1.y  = py;
       Ani.to(point1, 1.0f, "x", target1.x);
       Ani.to(point1, 1.0f, "y", target1.y);
@@ -49,7 +49,7 @@ class Coins
     if(mX >= point1.x && mX <= (point1.x + sizeX)
     && mY >= point1.y && mY <= (point1.y + sizeY))
     {
-      return true;  
+      return true;
     }
     return false;
   }
