@@ -1,21 +1,26 @@
 class Emotion
 {
-  int ht, wt;
+  int ht, wt, id;      // id reflects the emotion type
   PImage emoPic;
   PVector point1, target1, basepoint;
   boolean itsMe;
   Ani aniA;
 
   //constructor: used to initialize the variables.
-  Emotion(int startX, int startY, String emoName)
+  Emotion(int startX, int startY, int type)
   {
-    ht = wt = 300;
+    ht = wt = 300; //<>//
     point1 = new PVector(startX, startY);
     basepoint = new PVector(startX, startY);
     target1 = new PVector(startX, startY);
-    emoPic = loadImage(emoName);
-    emoPic.resize(200, 200);
     itsMe = false;
+    id = type;
+  }
+  
+  void loadImages(String path)
+  {
+    emoPic = loadImage(path);
+    emoPic.resize(200, 200);
   }
 
   void gotoXY(float px, float py, int x, int y)
@@ -73,5 +78,10 @@ class Emotion
     Ani.to(point1, 1.0f, "x", basepoint.x);
     Ani.to(point1, 1.0f, "y", basepoint.y);
     emoPic.resize(sizeX, sizeY);
+  }
+  
+  int getType()
+  {
+    return id;
   }
 }

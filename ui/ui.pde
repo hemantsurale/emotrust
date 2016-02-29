@@ -8,22 +8,24 @@ Emotion[] e;
 int i1, j, dist = ceil(0.03 * displayWidth), x, size = 50, sizeofFace = 100;
 int state;              // to maintain the game state
 int time;
-
+int faceCount = 7;
 void setup()
 {
   size(displayWidth, displayHeight); // fullscreen
   Ani.init(this);           
   c = new Coins[20];    // object memory allocation
   e = new Emotion[20];
-
+  j = 1;
   // 8 emotions in the emotion panel
-  for (x = 0; x < 8; x++) 
+  for (x = 0; x < faceCount; x++) 
   {
     e[x] = new Emotion((int)(displayWidth * 0.03), 
-      (int)(2*dist + displayHeight * 0.1), "dispntd.png");
+     (int)(2*dist + displayHeight * 0.1), x);
     dist += ceil(0.03 * displayWidth);
+    e[x].loadImages("a" + j + ".png"); //<>//
+    j++;
   }
-
+  
   dist = ceil(0.03 * displayWidth);
   // 10 coins in 1st row
   for (x = 0; x < 10; x++) 
@@ -58,7 +60,7 @@ void draw()
   fill(255);
   image(gameName, displayWidth * 0.3, 0);
   textSize(35);
-  text("Coins recieved", (int)(50 + displayWidth * 0.51), 
+  text("Coins recieved", (int)(180 + displayWidth * 0.51), 
     (int)(displayHeight * 0.61) - 30);
   text("Your coins", (int)(50 + displayWidth * 0.15), 
     (int)(displayHeight * 0.61) - 30);
@@ -83,18 +85,17 @@ void draw()
   }
 
   // emotion panel
-  fill(255, 120);
+  fill(255);
+  text("Select", 60, 90);
+  fill(255, 20);
   stroke(0, 0);
   rect(20, 50, 
     displayWidth * 0.1, displayHeight - 150);
-  for (j = 0; j < 8; j++)
+  for (j = 0; j < faceCount; j++)
   {
     e[j].draw(e[j].point1.x, e[j].point1.y, sizeofFace, sizeofFace);
-    if(e[j].isItMe() && (millis() - time) < 5000)
-    {
-      //image(e[j].emoPic,e[j].target1.x,e[j].target1.y,300,300);
-      Ani.to(e[j].emoPic, 5, "x:" + e[j].target1.x + ",y:" + e[j].target1.y + ",w:300,h:300", Ani.SINE_IN_OUT);
-    }
+    if(e[j].isItMe() && (millis() - time) > 1000)
+      image(e[j].emoPic,e[j].target1.x - 100,e[j].target1.y - 100,300,300);
   }
 }
 
@@ -113,7 +114,7 @@ void mousePressed()
 
   // do the face hit-testing here.
   // do the coin hit-test here.
-  for (j = 0; j<8; j++)
+  for (j = 0; j<faceCount; j++)
   {
     //if((sq(mouseX - c[j].point1.x) + sq(mouseY - c[j].point1.y)) < sq(30))
     if (e[j].isHit(mouseX, mouseY, sizeofFace, sizeofFace))
