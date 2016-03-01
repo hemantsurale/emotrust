@@ -45,7 +45,7 @@ void controlEvent(ControlEvent ev)
     if (emo_selected)
      MsgBox("emotion Id: " + String.valueOf(emojiId) +
        ", totalCoins:" + String.valueOf(coinNo), "Success!!");
-    
+      // send to edmund // get parameter list to be sent from here.
     send_b.lock();
   }
 
@@ -57,7 +57,7 @@ void controlEvent(ControlEvent ev)
           (int)c[j].basepoint.x, (int)c[j].basepoint.y);
         c[j].isItMe(true);
       }
-  // send to edmund // get parameter list to be sent from here.
+
 }
 
 // Fire messages

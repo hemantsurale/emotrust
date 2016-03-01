@@ -51,6 +51,10 @@ public class model{
     }
   }
   
+  //Following function takes arguments -
+    // for the Part 1, isReturnCoin is always false, else true.
+    // Id defines the type of the player - 0: participant 1: Bot
+    // Numcoins: total coins gave
   public void giveCoin(int id, int numCoin, boolean isReturnCoin){
     if(isReturnCoin){
       getCoin[id]-=numCoin;
