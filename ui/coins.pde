@@ -4,7 +4,7 @@ class Coins
   int ht, wt;
   boolean isSelected;
   PImage coinPic;
-  PVector point1, target1;
+  PVector point1, target1, basepoint;
   boolean itsMe;
   Ani aniA;
   //constructor: used to initialize the variables.
@@ -15,6 +15,7 @@ class Coins
     isSelected = false;
     point1 = new PVector(startX, startY);
     target1 = new PVector(startX, startY);
+    basepoint = new PVector(startX, startY);
     coinPic = loadImage("coin.png");
     coinPic.resize(45, 45);
     itsMe = false;
@@ -23,7 +24,7 @@ class Coins
   {
     if (itsMe)
     {
-      isSelected = true;
+      //isSelected = true;
       target1.x = x;
       target1.y = y;
       point1.x  = px;
@@ -41,7 +42,12 @@ class Coins
 
   void isItMe(boolean flag)
   {
-    itsMe = flag;
+    //itsMe = flag;
+    itsMe = !itsMe;
+    if(itsMe)
+      coinPic.filter(INVERT);
+    else
+      coinPic.filter(INVERT);
   }
   
   boolean isHit(int mX, int mY, int sizeX, int sizeY)
@@ -53,10 +59,18 @@ class Coins
     }
     return false;
   }
-  
-  void changefilter(char c)
+     void changefilter(char c)
   {
     if(c == 'i')
       coinPic.filter(INVERT);
+    if(c == 's')
+      coinPic.filter(INVERT);
   }
+  boolean isSelected()
+  {
+    if(itsMe)
+      return true;
+    return false;
+  }
+
 }
