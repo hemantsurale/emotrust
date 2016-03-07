@@ -18,7 +18,7 @@ public class model{
     if(!f.exists()){
       createFile(f);
     }
-    output = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
+    //output = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
     
     round = 0;
     
@@ -106,6 +106,7 @@ public class model{
     
     //TODO: determine emoji to send
     computerEmojiIndex = 0;
+    return 1;
   }
   
   public void closeLogger(){
