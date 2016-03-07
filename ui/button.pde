@@ -57,7 +57,6 @@ void controlEvent(ControlEvent ev)
           (int)c[j].basepoint.x, (int)c[j].basepoint.y);
         c[j].isItMe(true);
       }
-
 }
 
 // Fire messages
