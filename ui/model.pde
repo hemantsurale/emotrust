@@ -11,6 +11,9 @@ public class model{
   public int[] returnCoin = new int[2];
   private PrintWriter  output;
   private String filename = "";
+  private boolean TFT; // this variable specifies whther the current execution is in Tit for tat mode or random mode, need a way to set this.
+  private int coinsReceived; // coins recieieved in part 1
+  private int coinsReturned; // coins returned in part 2
   
   public model(){
     //create logger
@@ -81,21 +84,84 @@ public class model{
     resetCoinInfo();
   }
   
-  public int EmojiFromComputer(){
+ 
+  /*
+  Assumming the folowing emoji table:
+  0. Slightly Happy
+  1. Guilty
+  2. Moderately Angry
+  3. Very Angry
+  4. Moderately Dissapointed
+  5. Very Dissapointed
+  */
+  private boolean consistentEmotion = true; // consistent or inconsistent emotions, need a way to set all these flags while running.
+  private boolean dissapointmentOverAnger = true; // this is to control dissapointment/anger
+
+  public int EmojiFromComputer(int coinsSent){
+    int computerEmojiIndex=0;
+    if(consistentEmotion){
+      int difference = coinsSent - coinsReceived;
+      if(difference>=-2 && difference<=0) computerEmojiIndex = 0; // happy
+      else if(difference<-2) computerEmojiIndex = 1; // guilty
+      else if(difference<=3 && difference>0){ // moderate anger or dissapointment
+        if(dissapointmentOverAnger) computerEmojiIndex = 2; 
+        else computerEmojiIndex = 4;
+      }
+      else if(difference>3){ // intense anger or dissapointment
+        if(dissapointmentOverAnger) computerEmojiIndex = 3;
+        else computerEmojiIndex = 5;
+      }
+    }
+    else{ // inconsistent(random) emotions
+    computerEmojiIndex = int (random(6));
+    }
+      
     return computerEmojiIndex;
   }
-  
-  //TODO: write algo
-  private int determineNumberCoinGive(){
-    return 10;
+ 
+ //function to get the number of coins sent by the opponent
+ int getCoinsSentByOpponent(){
+   coinsReceived = 10; // assigned an arbitary value as a placeholder, logic must be changed according to interfaces.
+   coinsReturned = 10;
+   return coinsReceived;
+ }
+   
+ 
+  /*
+  This is for part 1
+  Two modes of operation here:
+  1. Tit for tat (TFT)
+  2. Random 
+  */
+ private int determineNumberCoinGive(){
+   int coinsRecieved = getCoinsSentByOpponent();
+   int[] TFT_random_values = {-2,-1,0,1,2};
+   int[] random_values ={0,1,2,3,4,5,6,7,8,9,10};
+   int index, sendCoins;
+   if(TFT){
+     index = int (random(6));
+     int add_value = TFT_random_values[index];
+     sendCoins = add_value + coinsRecieved;
+     if( sendCoins<0)
+       sendCoins = max(0, sendCoins);
+     else
+       sendCoins = min(10, sendCoins);
+     }
+   else{
+     index = int (random(11));
+     sendCoins =  random_values[index];
+   }
+   return sendCoins;
   }
   
-  //TODO: write algo
+ //This is for part 2
   private int determineNumCoinReturn(){
-    if(round<10){
-      return 0;
-    }else{
-      return 10;
+    if(round<=10) return 0;
+    int coinsReturn = 0;
+    if(TFT){
+      if(coinsReturned)
+    }
+    else{
     }
   }
   
@@ -105,7 +171,7 @@ public class model{
     giveCoin(0,10,true);
     
     //TODO: determine emoji to send
-    computerEmojiIndex = 0;
+    computerEmojiIndex = EmojiFromComputer(give);
     return 1;
   }
   
