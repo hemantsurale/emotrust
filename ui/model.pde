@@ -155,6 +155,7 @@ public class model{
   }
   
  //This is for part 2
+ /*
   private int determineNumCoinReturn(){
     if(round<=10) return 0;
     int coinsReturn = 0;
@@ -164,7 +165,7 @@ public class model{
     else{
     }
   }
-  
+  */
   public int CoinGiveFromComputer(){
     int give = determineNumberCoinGive();
     giveCoin(0,10,false);
