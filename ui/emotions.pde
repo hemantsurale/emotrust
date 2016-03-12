@@ -42,11 +42,6 @@ class Emotion //<>//
     image(emoPic, x, y);
   }
 
-  // this will show/hide the opponent's emotion to the user
-  void showOrHide()
-  {
-  }
-
   void animate(int time)
   {
     // animation would be to slowly grow and shrink when necessary.

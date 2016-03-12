@@ -2,7 +2,7 @@ class Coins
 {
   int id;
   int ht, wt;
-  boolean isSelected;
+  boolean isSelected, locked;
   PImage coinPic;
   PVector point1, target1, basepoint;
   boolean itsMe;
@@ -42,35 +42,47 @@ class Coins
 
   void isItMe(boolean flag)
   {
-    //itsMe = flag;
-    itsMe = !itsMe;
-    if(itsMe)
-      coinPic.filter(INVERT);
-    else
-      coinPic.filter(INVERT);
+    coinPic.filter(INVERT);
+    itsMe = flag;
   }
-  
+
   boolean isHit(int mX, int mY, int sizeX, int sizeY)
   {
-    if(mX >= point1.x && mX <= (point1.x + sizeX)
-    && mY >= point1.y && mY <= (point1.y + sizeY))
+    if (mX >= point1.x && mX <= (point1.x + sizeX)
+      && mY >= point1.y && mY <= (point1.y + sizeY) && !locked)
     {
       return true;
     }
     return false;
   }
-     void changefilter(char c)
+  
+  void changefilter(char c)
   {
-    if(c == 'i')
+    if (c == 'i')
       coinPic.filter(INVERT);
-    if(c == 's')
+    if (c == 's')
       coinPic.filter(INVERT);
   }
+  
   boolean isSelected()
   {
-    if(itsMe)
+    if (itsMe)
       return true;
     return false;
   }
 
+  void hide()
+  {
+    coinPic = null;
+  }
+
+  void show()
+  {
+    coinPic = loadImage("coin.png");
+  }
+  
+  void lockUnlock(boolean lock)
+  {
+     locked = lock;
+  }
 }
