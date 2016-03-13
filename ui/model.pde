@@ -83,7 +83,6 @@ public class model {
 
   public void increaseRound() {
     round+=1;
-
     resetCoinInfo();
   }
 
@@ -101,7 +100,7 @@ public class model {
   private boolean dissapointmentOverAnger = true; // this is to control dissapointment/anger
 
   public int EmojiFromComputer(int coinsSent, int part) {
-    int computerEmojiIndex=0, difference ;
+    int computerEmojiIndex=0, difference;
     // determine emoji to send for part 1 or part 2
     if ( part ==1 ) difference = coinsSent - coinsReceived;
     else difference =int (((coinsReturnedByComputer/coinsReceived)- (coinsReturnedByOpponent/numberOfCoinsSend))*10);
@@ -124,9 +123,8 @@ public class model {
   }
 
   //function to get the number of coins sent by the opponent
-  int getCoinsSentByOpponent() {
-    coinsReceived = 10; // assigned an arbitary value as a placeholder, logic must be changed according to interfaces.
-    return coinsReceived;
+  void getCoinsSentByOpponent(int coinsFromPlayer) {
+    coinsReceived = coinsFromPlayer; // assigned an arbitary value as a placeholder, logic must be changed according to interfaces.
   }
   /*
   Helper functions for getting random noise in TFT and random values for random Case(non TFT)
@@ -152,10 +150,10 @@ public class model {
    */
 
   private void determineNumberCoinGive() {
-    int coinsRecieved = getCoinsSentByOpponent();
+    //int coinsRecieved = getCoinsSentByOpponent();
     if (TFT) {
       int add_value = getNoiseTFT();
-      numberOfCoinsSend = add_value + coinsRecieved;
+      numberOfCoinsSend = add_value + coinsReceived;
       if ( numberOfCoinsSend<0)
         numberOfCoinsSend = max(0, numberOfCoinsSend);
       else
