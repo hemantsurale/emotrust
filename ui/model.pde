@@ -121,11 +121,22 @@ public class model {
 
     return computerEmojiIndex;
   }
-
-  //function to get the number of coins sent by the opponent
+  /*
+  Helper functions for transferring data to UI
+   */
+ //function to get the number of coins sent by the opponent
   void getCoinsSentByOpponent(int coinsFromPlayer) {
     coinsReceived = coinsFromPlayer; // assigned an arbitary value as a placeholder, logic must be changed according to interfaces.
   }
+  int sendCoinsToOpponent(){
+    determineNumberCoinGive();
+    return numberOfCoinsSend;
+  }
+  
+  int sendEmoToOpponent(){
+    return EmojiFromComputer(numberOfCoinsSend, 1);
+  }
+ 
   /*
   Helper functions for getting random noise in TFT and random values for random Case(non TFT)
    */
@@ -150,7 +161,6 @@ public class model {
    */
 
   private void determineNumberCoinGive() {
-    //int coinsRecieved = getCoinsSentByOpponent();
     if (TFT) {
       int add_value = getNoiseTFT();
       numberOfCoinsSend = add_value + coinsReceived;
@@ -182,18 +192,7 @@ public class model {
     }
   }
 
-  public int CoinGiveFromComputer() {
-    determineNumberCoinGive();
-    int give = numberOfCoinsSend;
-    giveCoin(0, 10, false);
-    giveCoin(0, 10, true);
 
-    // emoji to send in part 1
-    computerEmojiIndex = EmojiFromComputer(give, 1);
-
-    //TODO: emoji to send in part 2
-    return 1;
-  }
 
   public void closeLogger() {
     output.close();
