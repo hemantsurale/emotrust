@@ -16,7 +16,9 @@ public class model {
   private int coinsReturnedByOpponent; // coins returned in part 2
   private int numberOfCoinsSend; // coins sent by the computer to the opponent
   private int coinsReturnedByComputer;
-
+  private boolean consistentEmotion = true; // consistent or inconsistent emotions, need a way to set all these flags while running.
+  private boolean dissapointmentOverAnger = true; // this is to control dissapointment/anger
+  
   public model() {
     //create logger
     File f = new File(dataPath(filename));
@@ -96,8 +98,7 @@ public class model {
    4. Moderately Dissapointed
    5. Very Dissapointed
    */
-  private boolean consistentEmotion = true; // consistent or inconsistent emotions, need a way to set all these flags while running.
-  private boolean dissapointmentOverAnger = true; // this is to control dissapointment/anger
+  
 
   public int EmojiFromComputer(int coinsSent, int part) {
     int computerEmojiIndex=0, difference;
@@ -124,7 +125,7 @@ public class model {
   /*
   Helper functions for transferring data to UI
    */
- //function to get the number of coins sent by the opponent
+ //function to get the number of coins sent by the opponent, call this in part 2 for the first interaction
   void getCoinsSentByOpponent(int coinsFromPlayer) {
     coinsReceived = coinsFromPlayer; // assigned an arbitary value as a placeholder, logic must be changed according to interfaces.
   }
@@ -132,9 +133,16 @@ public class model {
     determineNumberCoinGive();
     return numberOfCoinsSend;
   }
+ // call this in part 2 for the 2nd interaction
+   void getCoinsReturnedByOpponent(int coinsFromPlayer) {
+    coinsReturnedByOpponent = coinsFromPlayer; // assigned an arbitary value as a placeholder, logic must be changed according to interfaces.
+  }
   
-  int sendEmoToOpponent(){
+  int sendEmoToOpponentPartOne(){
     return EmojiFromComputer(numberOfCoinsSend, 1);
+  }
+   int sendEmoToOpponentPartTwo(){
+    return EmojiFromComputer(numberOfCoinsSend, 2);
   }
  
   /*
