@@ -16,7 +16,9 @@ public class model {
   private int coinsReturnedByOpponent; // coins returned in part 2
   private int numberOfCoinsSend; // coins sent by the computer to the opponent
   private int coinsReturnedByComputer;
-
+  private boolean consistentEmotion = true; // consistent or inconsistent emotions, need a way to set all these flags while running.
+  private boolean dissapointmentOverAnger = true; // this is to control dissapointment/anger
+  
   public model() {
     //create logger
     File f = new File(dataPath(filename));
@@ -96,8 +98,7 @@ public class model {
    4. Moderately Dissapointed
    5. Very Dissapointed
    */
-  private boolean consistentEmotion = true; // consistent or inconsistent emotions, need a way to set all these flags while running.
-  private boolean dissapointmentOverAnger = true; // this is to control dissapointment/anger
+  
 
   public int EmojiFromComputer(int coinsSent, int part) {
     int computerEmojiIndex=0, difference;
