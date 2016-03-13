@@ -15,10 +15,6 @@ void setupButton()
     .setPosition(send_b_x, button_y)
     .setSize( 400, 100 )
     .setColorBackground(#007F00);
-  //reset_b = ui.addButton( "<<<<<   RESET" )
-  //  .setPosition(reset_b_x, button_y)
-  //  .setSize( 400, 100 )
-  //  .setColorBackground(#007F00);
 }
 
 void controlEvent(ControlEvent ev)
@@ -70,6 +66,7 @@ void controlEvent(ControlEvent ev)
         }
       doNotDraw = true;
       state = 1;
+      m.getCoinsSentByOpponent(coinNo);
       // Get Coin Count and Emotion ID from edmund
       setCoinsNEmotions(ceil(random(0, faceCount - 1)), ceil(random(0, faceCount - 1))); 
       for (j = 0; j < 10; j++)

@@ -5,9 +5,11 @@ PImage bg, coins, gameName;       // image objects of canvas and coins
 PFont font;
 Coins[] c, bc;              // object declaration ownCoins and BlueCoins.
 Emotion[] e, be;            // BlueEmotions by the opponent.
+model m;                    // model initialization
 int i1, j, dist = ceil(0.03 * displayWidth), x, size = 50, sizeofFace = 100;
 int state = 0 ;              // State: 1 if coins are sent.
-int time, round;
+int time;
+String[] instruction;
 int faceCount = 7, BCreceived  = 0, Ereceived = -1;
 
 void setup()
@@ -21,9 +23,12 @@ void setup()
   bc = new Coins[10];   // blue coins
   e = new Emotion[20];
   be = new Emotion[20];
-  j = 1;
+  instruction = new String[10];
+  instruction[0] = "Select Coins and Press Send Button.";
+  instruction[1] = "Select Emoji and Press Send Button.";
+
   // 8 emotions in the emotion panel
-  for (x = 0; x < faceCount; x++) 
+  for (x = 0, j = 1; x < faceCount; x++) 
   {
     e[x] = new Emotion((int)(displayWidth * 0.03), 
       (int)(2*dist + displayHeight * 0.1), x);
@@ -32,10 +37,9 @@ void setup()
     e[x].id = j;
     j++;
   }
-
-  j = 1;
+  
   // 8 emotions in the emotion panel
-  for (x = 0; x < faceCount; x++) 
+  for (x = 0, j = 1; x < faceCount; x++) 
   {
     be[x] = new Emotion((int)(displayWidth * 0.2), 
       (int)(2*dist + displayHeight * 0.1), x);
@@ -45,18 +49,17 @@ void setup()
     j++;
   }
 
-  dist = ceil(0.03 * displayWidth);
   // 10 coins in 1st row
-  for (x = 0; x < 10; x++) 
+  for (x = 0, dist = ceil(0.03 * displayWidth); x < 10; x++) 
   {
     bc[x] = new Coins((int)(dist + displayWidth * 0.6), 
       (int)( displayHeight * 0.6));
     dist += ceil(0.03 * displayWidth);
     bc[x].changefilter('i');
   }
-  dist = 0;
+  
   // 10 coins in 2nd row
-  for (x = 0; x < 10; x++) 
+  for (x = 0, dist = 0; x < 10; x++) 
   {
     c[x] = new Coins((int)(dist + displayWidth * 0.2), 
       (int)( displayHeight * 0.6));
@@ -86,6 +89,7 @@ void draw()
       (int)(displayHeight * 0.61) - 30);
     text("Your coins", (int)(50 + displayWidth * 0.15), 
       (int)(displayHeight * 0.61) - 30);
+    text(instruction[0], displayWidth * 0.3, displayHeight * 0.2); 
 
     // draw available coins
     noStroke();
