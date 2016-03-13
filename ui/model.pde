@@ -124,7 +124,7 @@ public class model {
   /*
   Helper functions for transferring data to UI
    */
- //function to get the number of coins sent by the opponent
+ //function to get the number of coins sent by the opponent, call this in part 2 for the first interaction
   void getCoinsSentByOpponent(int coinsFromPlayer) {
     coinsReceived = coinsFromPlayer; // assigned an arbitary value as a placeholder, logic must be changed according to interfaces.
   }
@@ -132,9 +132,16 @@ public class model {
     determineNumberCoinGive();
     return numberOfCoinsSend;
   }
+ // call this in part 2 for the 2nd interaction
+   void getCoinsReturnedByOpponent(int coinsFromPlayer) {
+    coinsReturnedByOpponent = coinsFromPlayer; // assigned an arbitary value as a placeholder, logic must be changed according to interfaces.
+  }
   
-  int sendEmoToOpponent(){
+  int sendEmoToOpponentPartOne(){
     return EmojiFromComputer(numberOfCoinsSend, 1);
+  }
+   int sendEmoToOpponentPartTwo(){
+    return EmojiFromComputer(numberOfCoinsSend, 2);
   }
  
   /*
