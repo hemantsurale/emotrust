@@ -1,4 +1,4 @@
-import de.looksgood.ani.*; //<>//
+import de.looksgood.ani.*; //<>// //<>//
 import de.looksgood.ani.easing.*;
 
 PImage bg, coins, gameName;       // image objects of canvas and coins
@@ -18,7 +18,8 @@ void setup()
 
   //size(displayWidth, displayHeight); // fullscreen
   fullScreen();
-  Ani.init(this);           
+  Ani.init(this); 
+  m = new model();
   c = new Coins[10];    // object memory allocation, ownCoins
   bc = new Coins[10];   // blue coins
   e = new Emotion[20];
@@ -73,7 +74,7 @@ void setup()
   gameName.resize(800, 300);
   font  = loadFont("customs.vlw");
   textFont(font, 32);
-  time = ceil(random(50, 200));
+  time = 1; //ceil(random(50, 200));
 }
 
 void draw()
@@ -164,8 +165,8 @@ void mousePressed()
       if (e[j].isHit(mouseX, mouseY, sizeofFace, sizeofFace))
       {
         is_someone_hit = true;
-        if ( mouseX < (displayWidth * 0.2))
-          time = millis();
+        //if ( mouseX < (displayWidth * 0.2))
+          //time = millis();
       }
 
     for (j = 0; j<faceCount; j++)

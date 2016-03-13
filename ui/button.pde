@@ -42,9 +42,9 @@ void controlEvent(ControlEvent ev)
       // reset the flags of previously selected coins
       for (j = 0; j < 10; j++)
       {
+        c[j].lockUnlock(false);
         if (c[j].isSelected()) 
           c[j].isItMe(false);  
-        c[j].lockUnlock(false); 
       }
           
       for (j = 0; j<faceCount; j++)
@@ -53,6 +53,8 @@ void controlEvent(ControlEvent ev)
           e[j].goBackToBase(sizeofFace, sizeofFace);
           e[j].ItzMe(false);
         }
+        BCreceived = 0;
+        Ereceived = -1;
     }
 
     if (state == 0)
@@ -67,8 +69,9 @@ void controlEvent(ControlEvent ev)
       doNotDraw = true;
       state = 1;
       m.getCoinsSentByOpponent(coinNo);
+      println(coinNo);
       // Get Coin Count and Emotion ID from edmund
-      setCoinsNEmotions(ceil(random(0, faceCount - 1)), ceil(random(0, faceCount - 1))); 
+      setCoinsNEmotions(m.sendCoinsToOpponent(), m.sendEmoToOpponentPartOne()); 
       for (j = 0; j < 10; j++)
         c[j].lockUnlock(true); 
     }
@@ -80,14 +83,14 @@ void controlEvent(ControlEvent ev)
     // send to edmund // get parameter list to be sent from here.
   }
 
-  if (ev.isFrom(reset_b))
-    for (j = 0; j < 10; j++)
-      if (c[j].isSelected())
-      {
-        c[j].gotoXY((int)send_b_x, (int)button_y, 
-          (int)c[j].basepoint.x, (int)c[j].basepoint.y);
-        c[j].isItMe(true);
-      }
+  //if (ev.isFrom(reset_b))
+  //  for (j = 0; j < 10; j++)
+  //    if (c[j].isSelected())
+  //    {
+  //      c[j].gotoXY((int)send_b_x, (int)button_y, 
+  //        (int)c[j].basepoint.x, (int)c[j].basepoint.y);
+  //      c[j].isItMe(true);
+  //    }
 }
 
 // Fire messages
