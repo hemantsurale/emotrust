@@ -33,6 +33,11 @@ class Coins
       Ani.to(point1, 1.0f, "y", target1.y);
     }
   }
+  void goBackToBase()
+  {
+    point1.x =  basepoint.x;
+    point1.y =  basepoint.y;
+  }
   void draw(float x, float y, int sizeX, int sizeY)
   {
     coinPic.resize(sizeX, sizeY);
@@ -85,4 +90,5 @@ class Coins
   {
      locked = lock;
   }
+  
 }
