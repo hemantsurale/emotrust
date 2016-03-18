@@ -1,4 +1,9 @@
-import de.looksgood.ani.*; //<>// //<>//
+/* //<>//
+  Affective computing project.
+ Team - Shikha, Edmund, Hemant
+ */
+
+import de.looksgood.ani.*; 
 import de.looksgood.ani.easing.*;
 
 PImage bg, coins, gameName;       // image objects of canvas and coins
@@ -7,11 +12,12 @@ Coins[] c, bc;              // object declaration ownCoins and BlueCoins.
 Emotion[] e, be;            // BlueEmotions by the opponent.
 model m;                    // model initialization
 int i1, j, dist = ceil(0.03 * displayWidth), x, size = 50, sizeofFace = 100;
-int state = 0 ;              // State: 1 if coins are sent.
+int state = 0, status = 0;              // State: 1 if coins are sent.
 int time;
 String[] instruction;
 int faceCount = 7, BCreceived  = 0, Ereceived = -1;
-
+int interaction_no = 0;    // to count the interaction number for part 2
+int part1Rounds = 10, totalRounds = 20;
 void setup()
 {
   setupButton();
@@ -20,7 +26,7 @@ void setup()
   fullScreen();
   Ani.init(this); 
   m = new model();
-  c = new Coins[10];    // object memory allocation, ownCoins
+  c = new Coins[20];    // object memory allocation, ownCoins
   bc = new Coins[10];   // blue coins
   e = new Emotion[20];
   be = new Emotion[20];
@@ -38,8 +44,8 @@ void setup()
     e[x].id = j;
     j++;
   }
-  
-  // 8 emotions in the emotion panel
+
+  // 8 computer agent's emotions
   for (x = 0, j = 1; x < faceCount; x++) 
   {
     be[x] = new Emotion((int)(displayWidth * 0.2), 
@@ -58,7 +64,7 @@ void setup()
     dist += ceil(0.03 * displayWidth);
     bc[x].changefilter('i');
   }
-  
+
   // 10 coins in 2nd row
   for (x = 0, dist = 0; x < 10; x++) 
   {
@@ -79,6 +85,8 @@ void setup()
 
 void draw()
 {
+  if (m.getCurrentRound() == totalRounds + 1)
+        exit(); 
   if (!doNotDraw)
   {
     // static UI part
@@ -90,7 +98,13 @@ void draw()
       (int)(displayHeight * 0.61) - 30);
     text("Your coins", (int)(50 + displayWidth * 0.15), 
       (int)(displayHeight * 0.61) - 30);
-    text(instruction[0], displayWidth * 0.3, displayHeight * 0.2); 
+
+    if (state == 0)
+      text("Round: " + m.getCurrentRound() + " " 
+        + instruction[state], displayWidth * 0.3, displayHeight * 0.2); 
+    else
+      text("Round: " + m.getCurrentRound() + " "
+        + instruction[state], displayWidth * 0.3, displayHeight * 0.2); 
 
     // draw available coins
     noStroke();
@@ -100,7 +114,7 @@ void draw()
 
     // Draw recieved coins and emotions
     for (j = 0; j < BCreceived; j++)
-      bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
+       bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
 
     if (Ereceived != -1)
       be[Ereceived].gotoXY(be[Ereceived].point1.x, be[Ereceived].point1.y, 
@@ -134,14 +148,16 @@ void draw()
       e[j].draw(e[j].point1.x, e[j].point1.y, sizeofFace, sizeofFace);
       e[j].animate(time);
     }
-  } else 
+  } 
+  else 
   {
     if (time != 0)
     {
       delay(time--);
       rect(0, 0, displayWidth, displayHeight);
       send_b.hide();
-    } else
+    } 
+    else
     {
       doNotDraw = false;
       send_b.show();
@@ -157,7 +173,16 @@ void mousePressed()
     // do the coin hit-test here.
     for (j = 0; j<10; j++)
       if (c[j].isHit(mouseX, mouseY, size, size))
-        c[j].isItMe(true);
+      {
+        if(!c[j].isSelected())
+          c[j].isItMe(true);
+        else
+          c[j].changefilter('i');
+      }
+
+    for (j = 0; interaction_no == 1 && j<10; j++)
+      if (bc[j].isHit(mouseX, mouseY, size, size))
+        bc[j].isItMe(true);
 
     // do the face hit-testing here.
     // somebodyz hit
@@ -166,7 +191,7 @@ void mousePressed()
       {
         is_someone_hit = true;
         //if ( mouseX < (displayWidth * 0.2))
-          //time = millis();
+        //time = millis();
       }
 
     for (j = 0; j<faceCount; j++)
