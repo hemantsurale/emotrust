@@ -1,10 +1,20 @@
-/* //<>//
+import ddf.minim.*; //<>//
+import ddf.minim.analysis.*;
+import ddf.minim.effects.*;
+import ddf.minim.signals.*;
+import ddf.minim.spi.*;
+import ddf.minim.ugens.*;
+
+/*
   Affective computing project.
  Team - Shikha, Edmund, Hemant
  */
 
 import de.looksgood.ani.*; 
 import de.looksgood.ani.easing.*;
+
+Minim minim;
+AudioPlayer song;
 
 PImage bg, coins, gameName;       // image objects of canvas and coins
 PFont font;
@@ -17,13 +27,179 @@ int time;
 String[] instruction;
 int faceCount = 7, BCreceived  = 0, Ereceived = -1;
 int interaction_no = 0;    // to count the interaction number for part 2
-int part1Rounds = 10, totalRounds = 20;
+int part1Rounds, totalRounds;
+boolean sayOnce = true;
+
 void setup()
 {
-  setupButton();
+  setupButton();       // initialize button parameters.
+  initCanvas();        // setting up the coins and emoji panel.
+  initRounds(1, 2);    // part1Rounds, totalRounds.
+  minim = new Minim(this);  // initialization of sound.
+  fullScreen();      
+  time = 1;            // screen white out time, after player has sent the coins.
+}
 
-  //size(displayWidth, displayHeight); // fullscreen
-  fullScreen();
+void draw()
+{
+  if (m.getCurrentRound() == totalRounds + 1)
+    exit(); 
+  if (!doNotDraw)
+  {
+    if (state == 2)
+    {
+      for (i1 = 0; i1 < 10; i1++)
+      {
+        if (c[i1].isSelected())
+          c[i1].isItMe(false);
+        c[i1].point1.x = c[i1].basepoint.x;
+        c[i1].point1.y = c[i1].basepoint.y;
+      }
+      state = 0;
+    }
+    paintCanvas();
+    
+    // draw available coins
+    noStroke();
+    fill(255, 0, 0, 128);
+    for (j = 0; j < 10; j++)
+      c[j].draw(c[j].point1.x, c[j].point1.y, size, size);
+
+    // Draw recieved coins and emotions
+    for (j = 0; j < BCreceived; j++)
+      bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
+
+    if (Ereceived != -1)
+      be[Ereceived].gotoXY(be[Ereceived].point1.x, be[Ereceived].point1.y, 
+        (int) (displayWidth * 0.7), (int)(displayHeight * 0.3));
+
+    stroke(255, 0, 0, 128);
+    strokeWeight(2);
+    noFill();
+
+    
+
+    // emotion panel
+    fill(255);
+    text("Select", 60, 90);
+    fill(255, 20);
+    stroke(0, 0);
+    rect(20, 50, 
+      displayWidth * 0.1, displayHeight - 150);
+    for (j = 0; j < faceCount; j++)
+    {
+      e[j].draw(e[j].point1.x, e[j].point1.y, sizeofFace, sizeofFace);
+      e[j].animate(time);
+    }
+  } else 
+  {
+    if (time != 0)
+    {
+      delay(time--);
+      rect(0, 0, displayWidth, displayHeight);
+      send_b.hide();
+    } else
+    {
+      doNotDraw = false;
+      send_b.show();
+    }
+  }
+}
+
+void mousePressed()
+{
+  boolean is_someone_hit = false;
+  if (!doNotDraw)
+  {
+    // do the coin hit-test here.
+    for (j = 0; j<10; j++)
+      if (c[j].isHit(mouseX, mouseY, size, size))
+      {
+        if (!c[j].isSelected())
+          c[j].isItMe(true);
+        else
+        {
+          c[j].changefilter('i');
+          c[j].isItMe(false);
+        }
+      }
+
+    for (j = 0; interaction_no == 1 && j<10; j++)
+      if (bc[j].isHit(mouseX, mouseY, size, size))
+      {
+        if (!bc[j].isSelected())
+          bc[j].isItMe(true);
+        else
+        {
+          bc[j].changefilter('i');
+          bc[j].isItMe(false);
+        }
+      }
+
+    // do the face hit-testing here.
+    // somebodyz hit
+    for (j = 0; j<faceCount; j++)
+      if (e[j].isHit(mouseX, mouseY, sizeofFace, sizeofFace))
+      {
+        is_someone_hit = true;
+        //if ( mouseX < (displayWidth * 0.2))
+        //time = millis();
+      }
+
+    for (j = 0; j<faceCount; j++)
+    {
+      if (e[j].isHit(mouseX, mouseY, sizeofFace, sizeofFace))
+      {
+        e[j].ItzMe(true);
+        e[j].gotoXY(e[j].point1.x, e[j].point1.y, 
+          (int) (displayWidth * 0.4), (int)(displayHeight * 0.3));
+      } else if (e[j].isItMe() && is_someone_hit)
+      {
+        e[j].goBackToBase(sizeofFace, sizeofFace);
+        e[j].ItzMe(false);
+      }
+    }
+  }
+}
+
+void keyPressed() 
+{
+  if (key == 27)    // ignore the escape key
+    key = 0;
+}
+
+void paintCanvas()
+{  
+  // static UI part
+  background(bg);  // paint the canvas with image
+  fill(255);
+  image(gameName, displayWidth * 0.3, 0);
+
+  textSize(35);
+  text("Coins recieved", (int)(180 + displayWidth * 0.51), 
+    (int)(displayHeight * 0.61) - 30);
+  text("Your coins", (int)(50 + displayWidth * 0.15), 
+    (int)(displayHeight * 0.61) - 30);
+
+  if (state == 0)
+  {
+    text("Round: " + m.getCurrentRound() + " " 
+      + instruction[state], displayWidth * 0.3, displayHeight * 0.2); 
+    sayIt(state);
+  }
+  else
+  {
+    text("Round: " + m.getCurrentRound() + " "
+      + instruction[state], displayWidth * 0.3, displayHeight * 0.2); 
+    sayIt(state);
+  }
+
+  // update player score
+  text("Your score: " + m.score[0], displayWidth * 0.3, displayHeight * 0.8);
+}
+
+void initCanvas()
+{
   Ani.init(this); 
   m = new model();
   c = new Coins[20];    // object memory allocation, ownCoins
@@ -80,138 +256,10 @@ void setup()
   gameName.resize(800, 300);
   font  = loadFont("customs.vlw");
   textFont(font, 32);
-  time = 1; //ceil(random(50, 200));
 }
 
-void draw()
+void initRounds(int part1, int total)
 {
-  if (m.getCurrentRound() == totalRounds + 1)
-        exit(); 
-  if (!doNotDraw)
-  {
-    // static UI part
-    background(bg);  // paint the canvas with image
-    fill(255);
-    image(gameName, displayWidth * 0.3, 0);
-    textSize(35);
-    text("Coins recieved", (int)(180 + displayWidth * 0.51), 
-      (int)(displayHeight * 0.61) - 30);
-    text("Your coins", (int)(50 + displayWidth * 0.15), 
-      (int)(displayHeight * 0.61) - 30);
-
-    if (state == 0)
-      text("Round: " + m.getCurrentRound() + " " 
-        + instruction[state], displayWidth * 0.3, displayHeight * 0.2); 
-    else
-      text("Round: " + m.getCurrentRound() + " "
-        + instruction[state], displayWidth * 0.3, displayHeight * 0.2); 
-
-    // draw available coins
-    noStroke();
-    fill(255, 0, 0, 128);
-    for (j = 0; j < 10; j++)
-      c[j].draw(c[j].point1.x, c[j].point1.y, size, size);
-
-    // Draw recieved coins and emotions
-    for (j = 0; j < BCreceived; j++)
-       bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
-
-    if (Ereceived != -1)
-      be[Ereceived].gotoXY(be[Ereceived].point1.x, be[Ereceived].point1.y, 
-        (int) (displayWidth * 0.7), (int)(displayHeight * 0.3));
-
-    stroke(255, 0, 0, 128);
-    strokeWeight(2);
-    noFill();
-
-    if (state == 2)
-    {
-      for (i1 = 0; i1 < 10; i1++)
-      {
-        if (c[i1].isSelected())
-          c[i1].isItMe(false);
-        c[i1].point1.x = c[i1].basepoint.x;
-        c[i1].point1.y = c[i1].basepoint.y;
-      }
-      state = 0;
-    }
-
-    // emotion panel
-    fill(255);
-    text("Select", 60, 90);
-    fill(255, 20);
-    stroke(0, 0);
-    rect(20, 50, 
-      displayWidth * 0.1, displayHeight - 150);
-    for (j = 0; j < faceCount; j++)
-    {
-      e[j].draw(e[j].point1.x, e[j].point1.y, sizeofFace, sizeofFace);
-      e[j].animate(time);
-    }
-  } 
-  else 
-  {
-    if (time != 0)
-    {
-      delay(time--);
-      rect(0, 0, displayWidth, displayHeight);
-      send_b.hide();
-    } 
-    else
-    {
-      doNotDraw = false;
-      send_b.show();
-    }
-  }
-}
-
-void mousePressed()
-{
-  boolean is_someone_hit = false;
-  if (!doNotDraw)
-  {
-    // do the coin hit-test here.
-    for (j = 0; j<10; j++)
-      if (c[j].isHit(mouseX, mouseY, size, size))
-      {
-        if(!c[j].isSelected())
-          c[j].isItMe(true);
-        else
-          c[j].changefilter('i');
-      }
-
-    for (j = 0; interaction_no == 1 && j<10; j++)
-      if (bc[j].isHit(mouseX, mouseY, size, size))
-        bc[j].isItMe(true);
-
-    // do the face hit-testing here.
-    // somebodyz hit
-    for (j = 0; j<faceCount; j++)
-      if (e[j].isHit(mouseX, mouseY, sizeofFace, sizeofFace))
-      {
-        is_someone_hit = true;
-        //if ( mouseX < (displayWidth * 0.2))
-        //time = millis();
-      }
-
-    for (j = 0; j<faceCount; j++)
-    {
-      if (e[j].isHit(mouseX, mouseY, sizeofFace, sizeofFace))
-      {
-        e[j].ItzMe(true);
-        e[j].gotoXY(e[j].point1.x, e[j].point1.y, 
-          (int) (displayWidth * 0.4), (int)(displayHeight * 0.3));
-      } else if (e[j].isItMe() && is_someone_hit)
-      {
-        e[j].goBackToBase(sizeofFace, sizeofFace);
-        e[j].ItzMe(false);
-      }
-    }
-  }
-}
-
-void keyPressed() 
-{
-  if (key == 27)    // ignore the escape key
-    key = 0;
+  part1Rounds = part1;
+  totalRounds = total;
 }
