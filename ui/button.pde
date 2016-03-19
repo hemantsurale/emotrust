@@ -1,4 +1,4 @@
-import controlP5.*;
+import controlP5.*; //<>//
 
 ControlP5 ui;
 Button send_b;
@@ -18,7 +18,7 @@ void setupButton()
 
 void controlEvent(ControlEvent ev)
 {
-  int emojiId = 0, coinNo = 0;
+  int emojiId = 0, coinNo = 0, temp = 0, temp1 = 0, part1Emoji = 0;
   boolean emo_selected = false;
   if (ev.isFrom(send_b))
   {
@@ -46,8 +46,11 @@ void controlEvent(ControlEvent ev)
       for (j = 0; j < 10; j++)
       {
         c[j].lockUnlock(false);
+        bc[j].lockUnlock(false);
         if (c[j].isSelected()) 
           c[j].isItMe(false);
+        if(bc[j].isSelected()) 
+          bc[j].isItMe(false);
       }
 
       for (j = 0; j<faceCount; j++)
@@ -57,64 +60,70 @@ void controlEvent(ControlEvent ev)
           e[j].ItzMe(false);
         }
       BCreceived = 0;
-      Ereceived = -1;
+      //Ereceived = -1;
+      Ereceived = temp1;
     }
 
     if (state == 0)
     {
-      // count number of coins selected to be sent to computer agent.
-      for (j = 0; j < 10; j++)
-        if (c[j].isSelected())  
-        {
-          c[j].gotoXY(c[j].point1.x, c[j].point1.y, 
-            (int)(displayWidth * 0.5), (int)button_y);
-          coinNo++;
-        }
-        
-      // if it is interaction_no == 1, player can send received coins too.
-      for (j = 0; interaction_no == 1 & j < 10; j++)
-        if (bc[j].isSelected())  
-        {
-          bc[j].gotoXY(bc[j].point1.x, bc[j].point1.y, 
-            (int)(displayWidth * 0.5), (int)button_y);
-          coinNo++;
-        }
-        
       // start the white out screen.
       doNotDraw = true;
 
       // Player may choose zero coins, so we could skip the coin# checks.
       if (m.getCurrentRound() <= part1Rounds)
       {
+        coinNo = selectCoins(1);
         state = 1;                // meaning player can select coins to be sent to computer.  
         m.getCoinsSentByOpponent(coinNo);
-        // Get Coin Count and Emotion ID from edmund
-        setCoinsNEmotions(m.sendCoinsToOpponent(), m.sendEmoToOpponent()); 
-       
+        println("P1 Coins sent: " + coinNo);
+        temp1 = m.sendEmoToOpponent();
+        setCoinsNEmotions(m.sendCoinsToOpponent(), -1); 
+        println("P1 Coins Got: " + BCreceived);
+
         // lock all the coins, as in part1, player should only send emoji after sending the coins.
         for (j = 0; j < 10; j++)
-          c[j].lockUnlock(true); 
-          
+          c[j].lockUnlock(true);
       } else if (m.getCurrentRound() <= totalRounds)
       {
         if (interaction_no == 0)
         {
+          sayOnce = true;
+          sayIt(2);                 // say its a part2 of the game.
+          sayOnce = false;
+          coinNo = selectCoins(1);
           interaction_no = 1;
           m.getCoinsSentByOpponent(coinNo);
-          setCoinsNEmotions(m.sendCoinsToOpponent(), m.sendEmoToOpponent()); 
-      
+          temp = m.determineNumberCoinGive();
+          temp1 = -1;
+          println("P2 Coins Got: " + temp + " Coins sent: " + coinNo);
+          setCoinsNEmotions(temp, temp1);
+
           // unlock all the coins received by the player.
           for (j = 0; j < 10; j++)
           {
-            bc[j].lockUnlock(false); 
-            bc[j].changefilter('i');
+            bc[j].lockUnlock(false);
+            bc[j].show();
+            bc[j].goBackToBase();
           }
+
+          for (j = 0; j < 10; j++)
+            c[j].lockUnlock(true);
           //for (j = 0; j < 10; j++)
           //  c[j].isItMe(false); // unlock all the coins, as player should send emoji only.
         } else if (interaction_no == 1)
         {
-          m.getCoinsReturnedByOpponent(coinNo);
-          setCoinsNEmotions(m.sendCoinsToOpponent(), m.sendEmoToOpponent()); 
+          coinNo = selectCoins(2);
+          m.getCoinsReturnedByOpponent(coinNo); // give only blue coins which receoived earlier
+          //temp = m.determineNumCoinReturn();
+          temp1 = m.sendEmoToOpponent();
+          println("P2 Coins Got: " + temp + " Coins sent: " + coinNo);
+          setCoinsNEmotions(temp, -1);
+          for (j = 0; j < temp; j++)
+          {
+            bc[j].show();
+            bc[j].isItMe(false);
+          }
+
           for (j = 0; j < 10; j++)
           {
             bc[j].lockUnlock(true); // unlock all the coins, as player should send emoji only.
@@ -153,4 +162,28 @@ void setCoinsNEmotions(int cCount, int eId)
 {
   BCreceived  = cCount;
   Ereceived = eId;
+  println("Coins from CA: " + BCreceived + ", emojiID: " + Ereceived);
+}
+
+int selectCoins(int flag)
+{
+  int coinNo = 0;
+  // count number of coins selected to be sent to computer agent.
+  for (j = 0; j < 10 && flag == 1; j++)
+    if (c[j].isSelected())  
+    {
+      c[j].gotoXY(c[j].point1.x, c[j].point1.y, 
+        (int)(displayWidth * 0.5), (int)button_y);
+      coinNo++;
+    }
+
+  // if it is interaction_no == 1, player can send received coins too.
+  for (j = 0; interaction_no == 1 & j < 10 && flag == 2; j++)
+    if (bc[j].isSelected())  
+    {
+      bc[j].gotoXY(bc[j].point1.x, bc[j].point1.y, 
+        (int)(displayWidth * 0.5), (int)button_y);
+      coinNo++;
+    } 
+  return coinNo;
 }
