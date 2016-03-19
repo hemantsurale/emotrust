@@ -84,7 +84,7 @@ void controlEvent(ControlEvent ev)
         state = 1;
         m.getCoinsSentByOpponent(coinNo);
         // Get Coin Count and Emotion ID from edmund
-        setCoinsNEmotions(m.sendCoinsToOpponent(), m.sendEmoToOpponentPartOne()); 
+        setCoinsNEmotions(m.sendCoinsToOpponent(), m.sendEmoToOpponent()); 
         for (j = 0; j < 10; j++)
           c[j].lockUnlock(true); // lock all the coins, as player should send emoji only.
       } else if (m.getCurrentRound() <= totalRounds)
@@ -92,7 +92,7 @@ void controlEvent(ControlEvent ev)
         if (interaction_no == 0)
         {
           m.getCoinsSentByOpponent(coinNo);
-          setCoinsNEmotions(m.sendCoinsToOpponent(), m.sendEmoToOpponentPartOne()); 
+          setCoinsNEmotions(m.sendCoinsToOpponent(), m.sendEmoToOpponent()); 
           interaction_no = 1;
           for (j = 0; j < 10; j++)
           {
@@ -104,7 +104,7 @@ void controlEvent(ControlEvent ev)
         } else if (interaction_no == 1)
         {
           m.getCoinsReturnedByOpponent(coinNo);
-          setCoinsNEmotions(m.sendCoinsToOpponent(), m.sendEmoToOpponentPartOne()); 
+          setCoinsNEmotions(m.sendCoinsToOpponent(), m.sendEmoToOpponent()); 
           for (j = 0; j < 10; j++)
           {
             bc[j].lockUnlock(true); // unlock all the coins, as player should send emoji only.
