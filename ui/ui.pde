@@ -183,15 +183,15 @@ void paintCanvas()
 
   if (state == 0)
   {
-    textSize(50);
+    textSize(40);
     text("Round: " + m.getCurrentRound() + " " 
-      + instruction[state], displayWidth * 0.35, displayHeight * 0.25); 
+      + instruction[state], displayWidth * 0.35, displayHeight * 0.2); 
     sayIt(state);
   } else
   {
-    textSize(50);
+    textSize(40);
     text("Round: " + m.getCurrentRound() + " "
-      + instruction[state], displayWidth * 0.35, displayHeight * 0.25); 
+      + instruction[state], displayWidth * 0.35, displayHeight * 0.2); 
     sayIt(state);
   }
   textSize(35);
