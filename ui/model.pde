@@ -29,7 +29,7 @@ public class model {
     }
     //output = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
 */
-    round = 0;
+    round = 1;
 
     for (int i=0; i<2; i++) {
       score[i]=0;
@@ -89,6 +89,11 @@ public class model {
       coinsSent[i]=10;
       coinsReturned[i]=0;
     }
+  }
+  
+  public int getCurrentRound()
+  {
+    return round;
   }
   /*
   //Following function takes arguments -
