@@ -207,7 +207,7 @@ public class model {
    2. Random 
    */
 
-  private void determineNumberCoinGive() {
+  private int determineNumberCoinGive() {
     if (TFT) {
       int add_value = getNoiseTFT();
       coinsSent[1] = add_value + coinsSent[0];
@@ -218,14 +218,14 @@ public class model {
     } else {
       coinsSent[1] = getRandomValue() ;
     }
+    return coinsSent[1];
   }
 
   /*
  This is for part 2
    this function will determine the number of coins to return
    */
-  private void determineNumCoinReturn() {
-    if (round<=10) return;
+  private int determineNumCoinReturn() {
     float computerReturnRatio;
     float opponentReturnRatio = (coinsReturned[0]/coinsSent[1]);
     if (TFT) {
@@ -237,5 +237,6 @@ public class model {
     } else {
       coinsReturned[1] = int(getRandomValue()*10*coinsSent[0]);
     }
+    return coinsReturned[1];
   }
 }

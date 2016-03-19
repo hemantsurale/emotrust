@@ -1,20 +1,19 @@
-import ddf.minim.*; //<>//
+/* //<>//
+  Affective computing project.
+ Team - Shikha, Edmund, Hemant
+ */
+
+import ddf.minim.*;
 import ddf.minim.analysis.*;
 import ddf.minim.effects.*;
 import ddf.minim.signals.*;
 import ddf.minim.spi.*;
 import ddf.minim.ugens.*;
-
-/*
-  Affective computing project.
- Team - Shikha, Edmund, Hemant
- */
-
-import de.looksgood.ani.*; 
+import de.looksgood.ani.*;
 import de.looksgood.ani.easing.*;
 
 Minim minim;
-AudioPlayer song;
+AudioPlayer msg;
 
 PImage bg, coins, gameName;       // image objects of canvas and coins
 PFont font;
@@ -34,7 +33,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(1, 2);    // part1Rounds, totalRounds.
+  initRounds(2, 4);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = 1;            // screen white out time, after player has sent the coins.
@@ -58,15 +57,18 @@ void draw()
       state = 0;
     }
     paintCanvas();
-    
+
     // draw available coins
     noStroke();
     fill(255, 0, 0, 128);
     for (j = 0; j < 10; j++)
       c[j].draw(c[j].point1.x, c[j].point1.y, size, size);
 
+    if (BCreceived >= 10)
+      BCreceived = 9;
+      
     // Draw recieved coins and emotions
-    for (j = 0; j < BCreceived; j++)
+    for (j = 0; j < BCreceived && BCreceived < 10; j++)
       bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
 
     if (Ereceived != -1)
@@ -77,11 +79,9 @@ void draw()
     strokeWeight(2);
     noFill();
 
-    
-
     // emotion panel
     fill(255);
-    text("Select", 60, 90);
+    text("Emoji", 80, 90);
     fill(255, 20);
     stroke(0, 0);
     rect(20, 50, 
@@ -119,7 +119,7 @@ void mousePressed()
           c[j].isItMe(true);
         else
         {
-          c[j].changefilter('i');
+          //c[j].changefilter('i');
           c[j].isItMe(false);
         }
       }
@@ -131,7 +131,7 @@ void mousePressed()
           bc[j].isItMe(true);
         else
         {
-          bc[j].changefilter('i');
+          //bc[j].changefilter('i');
           bc[j].isItMe(false);
         }
       }
@@ -183,19 +183,22 @@ void paintCanvas()
 
   if (state == 0)
   {
+    textSize(50);
     text("Round: " + m.getCurrentRound() + " " 
-      + instruction[state], displayWidth * 0.3, displayHeight * 0.2); 
+      + instruction[state], displayWidth * 0.35, displayHeight * 0.25); 
     sayIt(state);
-  }
-  else
+  } else
   {
+    textSize(50);
     text("Round: " + m.getCurrentRound() + " "
-      + instruction[state], displayWidth * 0.3, displayHeight * 0.2); 
+      + instruction[state], displayWidth * 0.35, displayHeight * 0.25); 
     sayIt(state);
   }
+  textSize(35);
 
   // update player score
-  text("Your score: " + m.score[0], displayWidth * 0.3, displayHeight * 0.8);
+  text("Your score: " + m.score[0], (int)(50 + displayWidth * 0.15), 
+    (int)(displayHeight * 0.61) + 90);
 }
 
 void initCanvas()
