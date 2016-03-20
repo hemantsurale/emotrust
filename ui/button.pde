@@ -114,10 +114,10 @@ void controlEvent(ControlEvent ev)
         {
           coinNo = selectCoins(2);
           m.getCoinsReturnedByOpponent(coinNo); // give only blue coins which receoived earlier
-          //temp = m.determineNumCoinReturn();
+          temp = m.determineNumCoinReturn();
           temp1 = m.sendEmoToOpponent();
-          println("P2 Coins Got: " + temp + " Coins sent: " + coinNo);
-          setCoinsNEmotions(temp, -1);
+          println("P2 Coins RETURNED BY CA: " + temp + " Coins sent: " + coinNo);
+          setCoinsNEmotions(temp1, -1);
           for (j = 0; j < temp; j++)
           {
             bc[j].show();
