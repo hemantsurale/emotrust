@@ -15,7 +15,7 @@ public class model {
   public int[] coinsReturned = new int[2]; //coinsReturned[0] -> number of coins returned BY opponent, [1]-> coins returned BY Computer
   private int[]emoji = new int[2]; // keeps track of the emoji
   private String filename = ""; /************ NEED TO SET THIS **************/
-  private boolean TFT; // this variable specifies whther the current execution is in Tit for tat mode or random mode, need a way to set this.
+  private boolean TFT = true ; // this variable specifies whther the current execution is in Tit for tat mode or random mode, need a way to set this.
   private boolean consistentEmotion = true; // consistent or inconsistent emotions, need a way to set all these flags while running.
   private boolean dissapointmentOverAnger = true; // this is to control dissapointment/anger
 
@@ -227,7 +227,7 @@ public class model {
    */
   private int determineNumCoinReturn() {
     float computerReturnRatio;
-    float opponentReturnRatio = (coinsReturned[0]/coinsSent[1]);
+    float opponentReturnRatio =(float(coinsReturned[0])/float(coinsSent[1]));
     if (TFT) {
       float noise = getNoiseTFT()*0.1;
       computerReturnRatio = opponentReturnRatio + noise;
