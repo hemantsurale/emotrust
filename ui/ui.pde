@@ -14,7 +14,8 @@ import de.looksgood.ani.easing.*;
 
 Minim minim;
 AudioPlayer msg;
-
+String fn;
+File ddf;
 PImage bg, coins, gameName;       // image objects of canvas and coins
 PFont font;
 Coins[] c, bc;              // object declaration ownCoins and BlueCoins.
@@ -28,6 +29,7 @@ int faceCount = 7, BCreceived  = 0, Ereceived = -1;
 int interaction_no = 0;    // to count the interaction number for part 2
 int part1Rounds, totalRounds;
 boolean sayOnce = true;
+String[] lines, list;
 
 void setup()
 {
@@ -37,6 +39,7 @@ void setup()
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = 1;            // screen white out time, after player has sent the coins.
+  changeSetting();
 }
 
 void draw()
@@ -66,7 +69,7 @@ void draw()
 
     if (BCreceived >= 10)
       BCreceived = 9;
-      
+
     // Draw recieved coins and emotions
     for (j = 0; j < BCreceived /*&& BCreceived < 10*/; j++)
       bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
@@ -265,4 +268,30 @@ void initRounds(int part1, int total)
 {
   part1Rounds = part1;
   totalRounds = total;
+}
+
+void changeSetting()
+{
+  int tft, cemotion, dovera;
+  
+  fn=sketchPath("data//settings.csv");
+  ddf=sketchFile(fn);
+  
+  if (ddf.exists()) {
+    println("Settings File Found!!");
+    lines = loadStrings("data//settings.csv");
+    list = splitTokens(lines[0], ",");
+    tft = Integer.parseInt(list[0]);
+    cemotion = Integer.parseInt(list[1]);
+    dovera = Integer.parseInt(list[2]);
+    m.TFT = m.consistentEmotion = m.dissapointmentOverAnger = false;
+    if ( tft != 0)
+      m.TFT = true;
+    if ( cemotion != 0)
+      m.consistentEmotion = true;
+    if ( dovera != 0)
+      m.dissapointmentOverAnger = true;
+  } 
+  else 
+    println("Settings Not Found!!");
 }

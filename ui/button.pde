@@ -117,20 +117,24 @@ void controlEvent(ControlEvent ev)
           temp = m.determineNumCoinReturn();
           temp1 = m.sendEmoToOpponent();
           println("P2 Coins RETURNED BY CA: " + temp + " Coins sent: " + coinNo);
-          setCoinsNEmotions(temp1, -1);
+          setCoinsNEmotions(temp, -1);
+          temp = 2;
           for (j = 0; j < temp; j++)
           {
             bc[j].show();
             bc[j].isItMe(false);
+            bc[j].goBackToBase();
           }
 
           for (j = 0; j < 10; j++)
           {
-            bc[j].lockUnlock(true); // unlock all the coins, as player should send emoji only.
+            bc[j].lockUnlock(true); // lock all the coins, as player should send emoji only. //<>//
 
             if (bc[j].isSelected())
+            {
               bc[j].changefilter('i');
-            bc[j].goBackToBase();
+              bc[j].goBackToBase();
+            }
 
             // send the previously selected set of coins backToBase
             // Also, deselect and unclock them.
@@ -162,7 +166,6 @@ void setCoinsNEmotions(int cCount, int eId)
 {
   BCreceived  = cCount;
   Ereceived = eId;
-  println("Coins from CA: " + BCreceived + ", emojiID: " + Ereceived);
 }
 
 int selectCoins(int flag)
