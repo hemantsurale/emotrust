@@ -10,6 +10,7 @@ void sayIt(int index)
     else if (index == 2)
       msg = minim.loadFile("data/nextpart.mp3");
     msg.play();
+    delay(10);
     sayOnce = false;
   }
   msg = null;

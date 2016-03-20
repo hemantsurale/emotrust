@@ -68,7 +68,7 @@ void draw()
       BCreceived = 9;
       
     // Draw recieved coins and emotions
-    for (j = 0; j < BCreceived && BCreceived < 10; j++)
+    for (j = 0; j < BCreceived /*&& BCreceived < 10*/; j++)
       bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
 
     if (Ereceived != -1)
