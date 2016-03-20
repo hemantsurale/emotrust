@@ -1,4 +1,4 @@
-/* //<>//
+/* //<>// //<>//
   Affective computing project.
  Team - Shikha, Edmund, Hemant
  */
@@ -25,7 +25,7 @@ int i1, j, dist = ceil(0.03 * displayWidth), x, size = 50, sizeofFace = 100;
 int state = 0, status = 0;              // State: 1 if coins are sent.
 int time;
 String[] instruction;
-int faceCount = 7, BCreceived  = 0, Ereceived = -1;
+int faceCount = 6, BCreceived  = 0, Ereceived = -1;
 int interaction_no = 0;    // to count the interaction number for part 2
 int part1Rounds, totalRounds;
 boolean sayOnce = true;
