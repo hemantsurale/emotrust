@@ -235,7 +235,7 @@ public class model {
       else if (computerReturnRatio >= 1) computerReturnRatio = 1;
       coinsReturned[1] = int(computerReturnRatio*coinsSent[0]);
     } else {
-      coinsReturned[1] = int(getRandomValue()*10*coinsSent[0]);
+      coinsReturned[1] = int(getRandomValue()*0.1*coinsSent[0]);
     }
     return coinsReturned[1];
   }
