@@ -119,8 +119,8 @@ public class model {
       score[0]+= coinsSent[1]; // score of participant
       score[1]+= coinsSent[0]; // score of computer
     } else {
-      score[0]+= 2*coinsReturned[1];
-      score[1]+= 2*coinsReturned[0];
+      score[0]+= coinsSent[1]-coinsReturned[0]+2*coinsReturned[1];
+      score[1]+= coinsSent[0]-coinsReturned[1]+2*coinsReturned[0];
     }
   }
 
@@ -222,7 +222,7 @@ public class model {
   }
 
   /*
- This is for part 2
+   This is for part 2
    this function will determine the number of coins to return
    */
   private int determineNumCoinReturn() {
