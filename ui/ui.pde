@@ -35,7 +35,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(2, 4);    // part1Rounds, totalRounds.
+  initRounds(5, 10);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = 1;            // screen white out time, after player has sent the coins.

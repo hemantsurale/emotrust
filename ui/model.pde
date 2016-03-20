@@ -11,8 +11,11 @@ public class model {
   public int round;
   public int computerEmojiIndex;
   public int[] score= new int[2];
+  public int coinsSentPreviousRound; // coins sent by the oppoenet in previous round
+  public int[] coinsRecievedPreviousRound= new int[2];
   public int[] coinsSent= new int[2]; //coinsSent[0] -> number of coins sent BY opponent, coinsSent[1]-> coins sent BY Computer
   public int[] coinsReturned = new int[2]; //coinsReturned[0] -> number of coins returned BY opponent, [1]-> coins returned BY Computer
+  private float coinsReturnedPreviousRoundRatio;
   private int[]emoji = new int[2]; // keeps track of the emoji
   private String filename = ""; /************ NEED TO SET THIS **************/
   private boolean TFT = true ; // this variable specifies whther the current execution is in Tit for tat mode or random mode, need a way to set this.
@@ -208,9 +211,10 @@ public class model {
    */
 
   private int determineNumberCoinGive() {
-    if (TFT) {
+    if(round==1) coinsSent[1] = getRandomValue() ;
+    else if (TFT) {
       int add_value = getNoiseTFT();
-      coinsSent[1] = add_value + coinsSent[0];
+      coinsSent[1] = add_value + coinsSentPreviousRound;
       if ( coinsSent[1]<0)
         coinsSent[1] = max(0, coinsSent[1]);
       else
@@ -218,6 +222,7 @@ public class model {
     } else {
       coinsSent[1] = getRandomValue() ;
     }
+    coinsSentPreviousRound = coinsSent[0];
     return coinsSent[1];
   }
 
@@ -228,15 +233,19 @@ public class model {
   private int determineNumCoinReturn() {
     float computerReturnRatio;
     float opponentReturnRatio =(float(coinsReturned[0])/float(coinsSent[1]));
-    if (TFT) {
+    if(round==11){
+      coinsReturned[1] = int(getRandomValue()*0.1*coinsSent[0]);
+    }
+    else if (TFT) {
       float noise = getNoiseTFT()*0.1;
-      computerReturnRatio = opponentReturnRatio + noise;
+      computerReturnRatio = coinsReturnedPreviousRoundRatio + noise;
       if (computerReturnRatio <= 0) computerReturnRatio = 0;
       else if (computerReturnRatio >= 1) computerReturnRatio = 1;
       coinsReturned[1] = int(computerReturnRatio*coinsSent[0]);
     } else {
       coinsReturned[1] = int(getRandomValue()*0.1*coinsSent[0]);
     }
+    coinsReturnedPreviousRoundRatio = opponentReturnRatio;
     return coinsReturned[1];
   }
 }
