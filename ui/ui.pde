@@ -1,5 +1,5 @@
 /* //<>// //<>// //<>//
-  Affective computing project.
+ Affective computing project.
  Team - Shikha, Edmund, Hemant
  */
 
@@ -60,7 +60,7 @@ void draw()
       state = 0;
     }
     paintCanvas();
-
+  
     // draw available coins
     noStroke();
     fill(255, 0, 0, 128);
@@ -96,7 +96,7 @@ void draw()
     {
       e[j].draw(e[j].point1.x, e[j].point1.y, sizeofFace, sizeofFace);
       e[j].animate(time);
-    }
+    }  
   } else 
   {
     if (time != 0)
@@ -137,8 +137,7 @@ void mousePressed()
         {
           bc[j].isItMe(true);
           println("point:"+ j + ", HIT");
-        }
-        else
+        } else
         {
           //bc[j].changefilter('i');
           bc[j].isItMe(false);
@@ -268,6 +267,7 @@ void initCanvas()
   gameName.resize(800, 300);
   font  = loadFont("customs.vlw");
   textFont(font, 32);
+
 }
 
 void initRounds(int part1, int total)
@@ -279,10 +279,10 @@ void initRounds(int part1, int total)
 void changeSetting()
 {
   int tft, cemotion, dovera;
-  
+
   fn=sketchPath("data//settings.csv");
   ddf=sketchFile(fn);
-  
+
   if (ddf.exists()) {
     println("Settings File Found!!");
     lines = loadStrings("data//settings.csv");
@@ -297,7 +297,6 @@ void changeSetting()
       m.consistentEmotion = true;
     if ( dovera != 0)
       m.dissapointmentOverAnger = true;
-  } 
-  else 
-    println("Settings Not Found!!");
+  } else 
+  println("Settings Not Found!!");
 }
