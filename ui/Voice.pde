@@ -1,4 +1,4 @@
- //<>// //<>//
+ //<>//
 void sayIt(int index)
 {  
  if (sayOnce)

@@ -1,4 +1,4 @@
-import controlP5.*; //<>// //<>//
+import controlP5.*; //<>// //<>// //<>// //<>//
 
 ControlP5 ui;
 Button send_b;
@@ -42,16 +42,6 @@ void controlEvent(ControlEvent ev)
           m.increaseRound();
       }
 
-      // reset the flags of previously selected coins
-      //for (j = 0; j < 10; j++)
-      //{
-      //  c[j].lockUnlock(false);
-      //  bc[j].lockUnlock(false);
-      //  if (c[j].isSelected()) 
-      //    c[j].isItMe(false);
-      //  if (bc[j].isSelected()) 
-      //    bc[j].isItMe(false);
-      //}
       backTobaseAllOwn();
       lockAllOwn(false);
       
@@ -63,6 +53,7 @@ void controlEvent(ControlEvent ev)
         }
       BCreceived = 0;
       Ereceived = temp1;
+      println("Eid:" + temp1);
       interaction_no = 0;
     }
 
@@ -80,6 +71,7 @@ void controlEvent(ControlEvent ev)
         println("Coins received P1" + BCreceived);
         deSelectAllBC();        // set received coins
         temp1 = m.sendEmoToOpponent();  // set emotions to be shown
+        println("Emoji received" + temp1);
         lockAllOwn(true);
         state = 1;
       } 
@@ -99,7 +91,7 @@ void controlEvent(ControlEvent ev)
           deSelectAllBC();
           println("Coins received I1 - " + BCreceived);
           lockAllOwn(true);
-          temp1 = -1;
+          Ereceived = -1;
           interaction_no = 1;
         } else if (interaction_no == 1)
         {
@@ -110,26 +102,27 @@ void controlEvent(ControlEvent ev)
           BCreceived = m.determineNumCoinReturn();
           println("Coins received I2 - " + BCreceived);
           temp1 = m.sendEmoToOpponent();
+          println("Emoji received I2 -" + temp1);
           deSelectBC(BCreceived);
           lockAllBC(true);
           lockAllOwn(true);
           state = 1;
         }
-      } //<>//
+      } 
     }
     sayOnce = true;
   }
 }
- //<>//
+
 // Fire messages
 void MsgBox(String Msg, String Title) 
 {
-  javax.swing.JOptionPane.showMessageDialog (
+  javax.swing.JOptionPane.showMessageDialog ( //<>//
     null, Msg, Title, javax.swing.JOptionPane.INFORMATION_MESSAGE);
 }
 
 void setCoinsNEmotions(int cCount)
-{
+{ //<>//
   BCreceived  = cCount;
 }
 
