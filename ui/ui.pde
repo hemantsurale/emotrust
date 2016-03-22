@@ -35,7 +35,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(5, 10);    // part1Rounds, totalRounds.
+  initRounds(1, 6);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = 1;            // screen white out time, after player has sent the coins.
@@ -68,7 +68,10 @@ void draw()
       c[j].draw(c[j].point1.x, c[j].point1.y, size, size);
 
     if (BCreceived >= 10)
+    {
       BCreceived = 9;
+      println("More than 10 coins received");
+    }
 
     // Draw recieved coins and emotions
     for (j = 0; j < BCreceived /*&& BCreceived < 10*/; j++)
@@ -127,11 +130,14 @@ void mousePressed()
         }
       }
 
-    for (j = 0; interaction_no == 1 && j<10; j++)
+    for (j = 0; interaction_no == 1 && j<10 && m.getCurrentRound() > part1Rounds; j++)
       if (bc[j].isHit(mouseX, mouseY, size, size))
       {
         if (!bc[j].isSelected())
+        {
           bc[j].isItMe(true);
+          println("point:"+ j + ", HIT");
+        }
         else
         {
           //bc[j].changefilter('i');
