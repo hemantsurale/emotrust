@@ -4,6 +4,7 @@ ControlP5 ui;
 Button send_b;
 float send_b_x, button_y, salt;    // salt is used to control the position as needed
 boolean doNotDraw = false;
+int temp1;
 
 void setupButton()
 {
@@ -18,7 +19,7 @@ void setupButton()
 
 void controlEvent(ControlEvent ev)
 {
-  int emojiId = 0, coinNo = 0, temp = 0, temp1 = 0, part1Emoji = 0;
+  int emojiId = 0, coinNo = 0, temp = 0, part1Emoji = 0;
   boolean emo_selected = false;
   if (ev.isFrom(send_b))
   {
