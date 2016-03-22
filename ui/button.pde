@@ -1,4 +1,4 @@
-import controlP5.*; //<>//
+import controlP5.*; //<>// //<>//
 
 ControlP5 ui;
 Button send_b;
@@ -43,16 +43,18 @@ void controlEvent(ControlEvent ev)
       }
 
       // reset the flags of previously selected coins
-      for (j = 0; j < 10; j++)
-      {
-        c[j].lockUnlock(false);
-        bc[j].lockUnlock(false);
-        if (c[j].isSelected()) 
-          c[j].isItMe(false);
-        if(bc[j].isSelected()) 
-          bc[j].isItMe(false);
-      }
-
+      //for (j = 0; j < 10; j++)
+      //{
+      //  c[j].lockUnlock(false);
+      //  bc[j].lockUnlock(false);
+      //  if (c[j].isSelected()) 
+      //    c[j].isItMe(false);
+      //  if (bc[j].isSelected()) 
+      //    bc[j].isItMe(false);
+      //}
+      backTobaseAllOwn();
+      lockAllOwn(false);
+      
       for (j = 0; j<faceCount; j++)
         if (e[j].isItMe())
         {
@@ -60,101 +62,65 @@ void controlEvent(ControlEvent ev)
           e[j].ItzMe(false);
         }
       BCreceived = 0;
-      //Ereceived = -1;
       Ereceived = temp1;
+      interaction_no = 0;
     }
 
-    if (state == 0)
+    if ( state == 0)
     {
       // start the white out screen.
       doNotDraw = true;
-
-      // Player may choose zero coins, so we could skip the coin# checks.
+      
       if (m.getCurrentRound() <= part1Rounds)
       {
         coinNo = selectCoins(1);
-        state = 1;                // meaning player can select coins to be sent to computer.  
         m.getCoinsSentByOpponent(coinNo);
-        println("P1 Coins sent: " + coinNo);
-        temp1 = m.sendEmoToOpponent();
-        setCoinsNEmotions(m.sendCoinsToOpponent(), -1); 
-        println("P1 Coins Got: " + BCreceived);
-
-        // lock all the coins, as in part1, player should only send emoji after sending the coins.
-        for (j = 0; j < 10; j++)
-          c[j].lockUnlock(true);
-      } else if (m.getCurrentRound() <= totalRounds)
+        println("Coins selected" + coinNo);
+        BCreceived = m.sendCoinsToOpponent();
+        println("Coins received P1" + BCreceived);
+        deSelectAllBC();        // set received coins
+        temp1 = m.sendEmoToOpponent();  // set emotions to be shown
+        lockAllOwn(true);
+        state = 1;
+      } 
+      else if ( m.getCurrentRound() <= totalRounds)
       {
         if (interaction_no == 0)
         {
-          sayOnce = true;
-          sayIt(2);                 // say its a part2 of the game.
-          sayOnce = false;
+          sayOnce = true;                  // to yell about part 2
+          sayIt(2);
+          
+          println("interaction 1");
           coinNo = selectCoins(1);
-          interaction_no = 1;
           m.getCoinsSentByOpponent(coinNo);
-          temp = m.determineNumberCoinGive();
+          println("Coins selected I1 - " + coinNo);
+          BCreceived = m.determineNumberCoinGive();
+          deSelectBC(BCreceived);
+          deSelectAllBC();
+          println("Coins received I1 - " + BCreceived);
+          lockAllOwn(true);
           temp1 = -1;
-          println("P2 Coins Got: " + temp + " Coins sent: " + coinNo);
-          setCoinsNEmotions(temp, temp1);
-
-          // unlock all the coins received by the player.
-          for (j = 0; j < 10; j++)
-          {
-            bc[j].lockUnlock(false);
-            bc[j].show();
-            bc[j].goBackToBase();
-          }
-
-          for (j = 0; j < 10; j++)
-            c[j].lockUnlock(true);
-          //for (j = 0; j < 10; j++)
-          //  c[j].isItMe(false); // unlock all the coins, as player should send emoji only.
+          interaction_no = 1;
         } else if (interaction_no == 1)
         {
+          println("interaction 2");
           coinNo = selectCoins(2);
-          m.getCoinsReturnedByOpponent(coinNo); // give only blue coins which receoived earlier
-          temp = m.determineNumCoinReturn();
+          m.getCoinsReturnedByOpponent(coinNo);
+          println("Coins selected I2 - " + coinNo);
+          BCreceived = m.determineNumCoinReturn();
+          println("Coins received I2 - " + BCreceived);
           temp1 = m.sendEmoToOpponent();
-          println("P2 Coins RETURNED BY CA: " + temp + " Coins sent: " + coinNo);
-          setCoinsNEmotions(temp, -1);
-          temp = 2;
-          for (j = 0; j < temp; j++)
-          {
-            bc[j].show();
-            bc[j].isItMe(false);
-            bc[j].goBackToBase();
-          }
-
-          for (j = 0; j < 10; j++)
-          {
-            bc[j].lockUnlock(true); // lock all the coins, as player should send emoji only. //<>//
-
-            if (bc[j].isSelected())
-            {
-              bc[j].changefilter('i');
-              bc[j].goBackToBase();
-            }
-
-            // send the previously selected set of coins backToBase
-            // Also, deselect and unclock them.
-            if (c[j].isSelected())
-            {
-              c[j].isItMe(false);
-              c[j].show();
-              c[j].goBackToBase();
-              c[j].lockUnlock(false);
-            }
-          }
-          state = 1;            // player can select the emoji.
-          interaction_no = 0;   // reset the interaction_no.
+          deSelectBC(BCreceived);
+          lockAllBC(true);
+          lockAllOwn(true);
+          state = 1;
         }
-      }
+      } //<>//
     }
     sayOnce = true;
   }
 }
-
+ //<>//
 // Fire messages
 void MsgBox(String Msg, String Title) 
 {
@@ -162,10 +128,9 @@ void MsgBox(String Msg, String Title)
     null, Msg, Title, javax.swing.JOptionPane.INFORMATION_MESSAGE);
 }
 
-void setCoinsNEmotions(int cCount, int eId)
+void setCoinsNEmotions(int cCount)
 {
   BCreceived  = cCount;
-  Ereceived = eId;
 }
 
 int selectCoins(int flag)
@@ -189,4 +154,77 @@ int selectCoins(int flag)
       coinNo++;
     } 
   return coinNo;
+}
+
+void deSelectAllOwn()
+{
+  for (j = 0; j < 10; j++)
+  {
+    c[j].show();
+    c[j].changefilter('i');
+    c[j].isItMe(false);
+  }
+}
+
+void backTobaseAllOwn()
+{
+  for (j = 0; j < 10; j++)
+    c[j].goBackToBase();
+}
+
+// flag: 1 lock all, flag: 0 unlock all.
+void lockAllOwn(boolean flag)
+{
+  for (j = 0; j < 10; j++)
+    c[j].lockUnlock(flag);
+}
+
+void unlockReceived(int no)
+{
+  for (j = 0; j < no; j++)
+    bc[j].lockUnlock(true);
+}
+
+void deSelectBC(int no)
+{
+  for (j = 0; j < no; j++)
+  {
+    bc[j] = null;
+  }
+  
+  for (x = 0, dist = ceil(0.03 * displayWidth); x < 10; x++) 
+  {
+    bc[x] = new Coins((int)(dist + displayWidth * 0.6), 
+      (int)( displayHeight * 0.6));
+    dist += ceil(0.03 * displayWidth);
+    //bc[x].changefilter('i');
+  }
+  
+  for (j = 0; j < no; j++)
+  {
+    bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
+  }
+  
+}
+
+void backTobaseBC(int no)
+{
+  for (j = 0; j < no; j++)
+    bc[j].goBackToBase();
+}
+
+void deSelectAllBC()
+{
+  for (j = 0; j < 10; j++)
+  {
+    bc[j].show();
+    bc[j].changefilter('i');
+    bc[j].isItMe(false);
+  }
+}
+
+void lockAllBC(boolean flag)
+{
+  for (j = 0; j < 10; j++)
+    bc[j].lockUnlock(flag);
 }
