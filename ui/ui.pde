@@ -44,6 +44,7 @@ void setup()
 
 void draw()
 {
+  
   if (m.getCurrentRound() == totalRounds + 1)
     exit(); 
   if (!doNotDraw)
@@ -60,7 +61,7 @@ void draw()
       state = 0;
     }
     paintCanvas();
-  
+
     // draw available coins
     noStroke();
     fill(255, 0, 0, 128);
@@ -79,7 +80,7 @@ void draw()
 
     if (Ereceived != -1)
       be[Ereceived].gotoXY(be[Ereceived].point1.x, be[Ereceived].point1.y, 
-        (int) (displayWidth * 0.7), (int)(displayHeight * 0.3));
+        (int) (displayWidth * 0.7), (int)(displayHeight * 0.4));
 
     stroke(255, 0, 0, 128);
     strokeWeight(2);
@@ -96,7 +97,7 @@ void draw()
     {
       e[j].draw(e[j].point1.x, e[j].point1.y, sizeofFace, sizeofFace);
       e[j].animate(time);
-    }  
+    }
   } else 
   {
     if (time != 0)
@@ -160,7 +161,7 @@ void mousePressed()
       {
         e[j].ItzMe(true);
         e[j].gotoXY(e[j].point1.x, e[j].point1.y, 
-          (int) (displayWidth * 0.4), (int)(displayHeight * 0.3));
+          (int) (displayWidth * 0.4), (int)(displayHeight * 0.4));
       } else if (e[j].isItMe() && is_someone_hit)
       {
         e[j].goBackToBase(sizeofFace, sizeofFace);
@@ -185,28 +186,34 @@ void paintCanvas()
 
   textSize(35);
   text("Coins recieved", (int)(180 + displayWidth * 0.51), 
-    (int)(displayHeight * 0.61) - 30);
+    (int)(displayHeight * 0.71) - 30);
   text("Your coins", (int)(50 + displayWidth * 0.15), 
-    (int)(displayHeight * 0.61) - 30);
+    (int)(displayHeight * 0.71) - 30);
 
   if (state == 0)
   {
     textSize(40);
     text("Round: " + m.getCurrentRound() + " " 
-      + instruction[state], displayWidth * 0.35, displayHeight * 0.2); 
+      + instruction[state], displayWidth * 0.35, displayHeight * 0.3); 
     sayIt(state);
   } else
   {
     textSize(40);
     text("Round: " + m.getCurrentRound() + " "
-      + instruction[state], displayWidth * 0.35, displayHeight * 0.2); 
+      + instruction[state], displayWidth * 0.35, displayHeight * 0.3); 
     sayIt(state);
   }
+
+  if (m.getCurrentRound() <= part1Rounds)
+    text(instruction[2], displayWidth * 0.25, displayHeight * 0.2);
+  if (m.getCurrentRound() > part1Rounds)
+    text(instruction[3], displayWidth * 0.25, displayHeight * 0.2); 
+
   textSize(35);
 
   // update player score
   text("Your score: " + m.score[0], (int)(50 + displayWidth * 0.15), 
-    (int)(displayHeight * 0.61) + 90);
+    (int)(displayHeight * 0.71) + 90);
 }
 
 void initCanvas()
@@ -218,8 +225,10 @@ void initCanvas()
   e = new Emotion[20];
   be = new Emotion[20];
   instruction = new String[10];
-  instruction[0] = "Select Coins and Press Send Button.";
-  instruction[1] = "Select Emoji and Press Send Button.";
+  instruction[0] = "Select Coins";
+  instruction[1] = "Select Emoji";
+  instruction[2] = "Part1 : Coins shared will be whaaat?";
+  instruction[3] = "Part2 : Coins returned by opponent will double in value.";
 
   // 8 emotions in the emotion panel
   for (x = 0, j = 1; x < faceCount; x++) 
@@ -247,7 +256,7 @@ void initCanvas()
   for (x = 0, dist = ceil(0.03 * displayWidth); x < 10; x++) 
   {
     bc[x] = new Coins((int)(dist + displayWidth * 0.6), 
-      (int)( displayHeight * 0.6));
+      (int)( displayHeight * 0.7));
     dist += ceil(0.03 * displayWidth);
     bc[x].changefilter('i');
   }
@@ -256,7 +265,7 @@ void initCanvas()
   for (x = 0, dist = 0; x < 10; x++) 
   {
     c[x] = new Coins((int)(dist + displayWidth * 0.2), 
-      (int)( displayHeight * 0.6));
+      (int)( displayHeight * 0.7));
     dist += ceil(0.03 * displayWidth);
   }
   // laptop vs desktop
@@ -267,7 +276,6 @@ void initCanvas()
   gameName.resize(800, 300);
   font  = loadFont("customs.vlw");
   textFont(font, 32);
-
 }
 
 void initRounds(int part1, int total)
