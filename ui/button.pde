@@ -1,4 +1,4 @@
-import controlP5.*;  //<>//
+import controlP5.*;  //<>// //<>// //<>//
 
 ControlP5 ui;
 Button send_b;
@@ -9,12 +9,16 @@ int temp1;
 void setupButton()
 {
   send_b_x = displayWidth * 0.4;
-  button_y = displayHeight * 0.9;
+  button_y = displayHeight * 0.85;
+  button_text = new ControlP5(this);
+
   ui = new ControlP5( this );
-  send_b = ui.addButton( "SEND   >>>>>" )
+  send_b = ui.addButton( "SEND" )
     .setPosition(send_b_x, button_y)
     .setSize( 400, 100 )
-    .setColorBackground(#007F00);
+    .setColorBackground(#7A5230)
+    .setColorActive(#AA7243);
+
 }
 
 void controlEvent(ControlEvent ev)
@@ -22,7 +26,7 @@ void controlEvent(ControlEvent ev)
   int emojiId = 0, coinNo = 0, temp = 0, part1Emoji = 0;
   boolean emo_selected = false;
   if (ev.isFrom(send_b))
-  {
+  {    
     if (state  == 1)
     {
       for (int j1 = 0; j1 < faceCount; j1++)
@@ -45,7 +49,7 @@ void controlEvent(ControlEvent ev)
 
       backTobaseAllOwn();
       lockAllOwn(false);
-      
+
       for (j = 0; j<faceCount; j++)
         if (e[j].isItMe())
         {
@@ -56,13 +60,15 @@ void controlEvent(ControlEvent ev)
       Ereceived = temp1;
       println("Eid:" + temp1);
       interaction_no = 0;
+      m.updateScore();
+      m.log();
     }
 
     if ( state == 0)
     {
       // start the white out screen.
       doNotDraw = true;
-      
+
       if (m.getCurrentRound() <= part1Rounds)
       {
         coinNo = selectCoins(1);
@@ -75,14 +81,11 @@ void controlEvent(ControlEvent ev)
         println("Emoji received" + temp1);
         lockAllOwn(true);
         state = 1;
-      } 
-      else if ( m.getCurrentRound() <= totalRounds)
+      } else if ( m.getCurrentRound() <= totalRounds)
       {
         if (interaction_no == 0)
         {
-          sayOnce = true;                  // to yell about part 2
-          sayIt(2);
-          
+
           println("interaction 1");
           coinNo = selectCoins(1);
           m.getCoinsSentByOpponent(coinNo);
@@ -109,7 +112,7 @@ void controlEvent(ControlEvent ev)
           lockAllOwn(true);
           state = 1;
         }
-      } 
+      }
     }
     sayOnce = true;
   }
@@ -118,12 +121,12 @@ void controlEvent(ControlEvent ev)
 // Fire messages
 void MsgBox(String Msg, String Title) 
 {
-  javax.swing.JOptionPane.showMessageDialog ( //<>//
+  javax.swing.JOptionPane.showMessageDialog (
     null, Msg, Title, javax.swing.JOptionPane.INFORMATION_MESSAGE);
 }
 
 void setCoinsNEmotions(int cCount)
-{ //<>//
+{
   BCreceived  = cCount;
 }
 
@@ -185,20 +188,19 @@ void deSelectBC(int no)
   {
     bc[j] = null;
   }
-  
+
   for (x = 0, dist = ceil(0.03 * displayWidth); x < 10; x++) 
   {
     bc[x] = new Coins((int)(dist + displayWidth * 0.6), 
-      (int)( displayHeight * 0.6));
+      (int)( displayHeight * 0.7));
     dist += ceil(0.03 * displayWidth);
     //bc[x].changefilter('i');
   }
-  
+
   for (j = 0; j < no; j++)
   {
     bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
   }
-  
 }
 
 void backTobaseBC(int no)
