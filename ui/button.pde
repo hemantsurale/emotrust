@@ -10,7 +10,6 @@ void setupButton()
 {
   send_b_x = displayWidth * 0.4;
   button_y = displayHeight * 0.85;
-  button_text = new ControlP5(this);
 
   ui = new ControlP5( this );
   send_b = ui.addButton( "SEND" )
@@ -23,7 +22,7 @@ void setupButton()
 
 void controlEvent(ControlEvent ev)
 {
-  int emojiId = 0, coinNo = 0, temp = 0, part1Emoji = 0;
+  int coinNo = 0, temp = 0, part1Emoji = 0;
   boolean emo_selected = false;
   if (ev.isFrom(send_b))
   {    
