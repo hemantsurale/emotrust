@@ -1,4 +1,4 @@
-import controlP5.*;  //<>// //<>// //<>//
+import controlP5.*;  //<>// //<>// //<>// //<>//
 
 ControlP5 ui;
 Button send_b;
@@ -10,7 +10,6 @@ void setupButton()
 {
   send_b_x = displayWidth * 0.4;
   button_y = displayHeight * 0.85;
-  button_text = new ControlP5(this);
 
   ui = new ControlP5( this );
   send_b = ui.addButton( "SEND" )
