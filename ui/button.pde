@@ -22,7 +22,7 @@ void setupButton()
 
 void controlEvent(ControlEvent ev)
 {
-  int emojiId = 0, coinNo = 0, temp = 0, part1Emoji = 0;
+  int coinNo = 0, temp = 0, part1Emoji = 0;
   boolean emo_selected = false;
   if (ev.isFrom(send_b))
   {    
