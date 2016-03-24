@@ -80,7 +80,7 @@ void draw()
 
     if (Ereceived != -1)
       be[Ereceived].gotoXY(be[Ereceived].point1.x, be[Ereceived].point1.y, 
-        (int) (displayWidth * 0.7), (int)(displayHeight * 0.4));
+        (int) (displayWidth * 0.75), (int)(displayHeight * 0.45));
 
     stroke(255, 0, 0, 128);
     strokeWeight(2);
