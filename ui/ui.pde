@@ -38,7 +38,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(1, 2);    // part1Rounds, totalRounds.
+  initRounds(5, 10);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = ceil(random(1, 5));            // screen white out time, after player has sent the coins.
@@ -80,7 +80,7 @@ void draw()
 
         if (BCreceived >= 10)
         {
-          BCreceived = 9;
+          BCreceived = 10;
           println("More than 10 coins received");
         }
 
