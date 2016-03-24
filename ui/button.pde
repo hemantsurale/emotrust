@@ -105,7 +105,6 @@ void controlEvent(ControlEvent ev)
           println("interaction 2: ");
           coinNo = selectCoins(2);
           m.getCoinsReturnedByOpponent(coinNo);
-          
           println("Coins selected I2: " + coinNo);
           BCreceived = m.determineNumCoinReturn();
           m.updateScore();
