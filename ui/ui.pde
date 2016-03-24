@@ -1,4 +1,4 @@
-/*  //<>//
+/*  //<>// //<>//
  Affective computing project.
  Team - Shikha, Edmund, Hemant
  */
@@ -241,8 +241,8 @@ void initCanvas()
   instruction = new String[10];
   instruction[0] = "Select Coins";
   instruction[1] = "Select Emotion";
-  instruction[2] = "Part1 : Coins shared will be whaaat?";
-  instruction[3] = "Part2 : Coins returned by opponent will double in value.";
+  instruction[2] = "Part 1: Share coins and then emotions.";
+  instruction[3] = "Part 2: Coins returned by opponent will double in value.";
 
   // 8 emotions in the emotion panel
   for (x = 0, j = 1; x < faceCount; x++) 
@@ -348,16 +348,17 @@ void displayInstructions(int when)
   if (when == 1)
   {
     background(0);
-    color(0, 255, 0);
     // Add instructions before start of the game.
-    text("Game Rules: \n\n Part 1:  \t\n\nStep 1: Exchange coins with the opponent." +
+    text("(IMPORTANT) 'EmoTrust' Rules \n\nPart 1:  \t\n\nStep 1: Exchange coins with the opponent." +
       "\t\nStep 2: Exchange emotions with the opponent.", 
       width * 0.1, height * 0.2);
     text("\t\n\nPart 2:  \t\n\nStep 1: Exchange coins with the opponent." +
       "\t\nStep 2: Select coins to be returned to the opponent, returned coins double in value." +
       "\t\nStep 3: Exchange emotions with the opponent.", 
-      width * 0.2, height * 0.4);
-    text("Please press spacebar to start the game. All the best!! :) ", 
+      width * 0.1, height * 0.4);
+    text("\t\n\nSCORE HIGH, you will be ranked based on your score in the game.", 
+      width * 0.2, height * 0.65);
+    text("Read all instructions? if yes, press 'spacebar'. \nAll the best!!", 
       width * 0.6, height * 0.8);
     send_b.hide();
     if (keyPressed)
