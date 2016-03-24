@@ -73,10 +73,11 @@ void controlEvent(ControlEvent ev)
       {
         coinNo = selectCoins(1);
         m.getCoinsSentByOpponent(coinNo);
-        m.updateScore();
+        
         println("Coins selected: " + coinNo);
         BCreceived = m.sendCoinsToOpponent();
         println("Coins received P1: " + BCreceived);
+        m.updateScore();
         deSelectAllBC();        // set received coins
         temp1 = m.sendEmoToOpponent();  // set emotions to be shown
         println("Emoji received: " + temp1);
