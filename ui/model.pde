@@ -119,11 +119,11 @@ public class model {
    */
   public void updateScore() {
     if (round<=10) {
-      score[0]+= coinsSent[1]; // score of participant
-      score[1]+= coinsSent[0]; // score of computer
+      score[0] = score[0] + coinsSent[1] + (10-coinsSent[0]); // score of participant
+      score[1]= score[0] + coinsSent[0] + (10-coinsSent[1]); // score of computer
     } else {
-      score[0]+= coinsSent[1]-coinsReturned[0]+2*coinsReturned[1];
-      score[1]+= coinsSent[0]-coinsReturned[1]+2*coinsReturned[0];
+      score[0]=(10-coinsSent[0])+ score[0] + (coinsSent[1]-coinsReturned[0]) + 2*coinsReturned[1];
+      score[1]=(10-coinsSent[0])+ score[1] + coinsSent[0]-coinsReturned[1] + 2*coinsReturned[0];
     }
     println("Score Participant" + score[0] + " Score Computer " + score[1]);
   }
@@ -149,7 +149,7 @@ public class model {
     int computerEmojiIndex=0, difference;
     // determine emoji to send for part 1 or part 2
     if ( part ==1 ) difference = coinsSent[1] - coinsSent[0];
-    else difference =int (((coinsReturned[1]/coinsSent[0])- (coinsReturned[0]/coinsSent[1]))*10);
+    else difference =int ((float(coinsReturned[1]/coinsSent[0])- float(coinsReturned[0]/coinsSent[1]))*10);
 
     if (consistentEmotion) {
       if (difference>=-2 && difference<=0) computerEmojiIndex = 0; // happy
