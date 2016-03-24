@@ -8,7 +8,6 @@ public class model {
    */
 
   private Table log = new Table();
-  PrintWriter log_file;
   public int round;
   public int computerEmojiIndex;
   public int[] score= new int[2];
@@ -18,22 +17,21 @@ public class model {
   public int[] coinsReturned = new int[2]; //coinsReturned[0] -> number of coins returned BY opponent, [1]-> coins returned BY Computer
   private float coinsReturnedPreviousRoundRatio;
   private int[]emoji = new int[2]; // keeps track of the emoji
-  private String filename = "log//log.csv"; /************ NEED TO SET THIS **************/
-  private boolean TFT ; // this variable specifies whther the current execution is in Tit for tat mode or random mode, need a way to set this.
-  private boolean consistentEmotion ; // consistent or inconsistent emotions, need a way to set all these flags while running.
+  private String filename = ""; /************ NEED TO SET THIS **************/
+  private boolean TFT; // this variable specifies whther the current execution is in Tit for tat mode or random mode, need a way to set this.
+  private boolean consistentEmotion; // consistent or inconsistent emotions, need a way to set all these flags while running.
   private boolean dissapointmentOverAnger; // this is to control dissapointment/anger
 
 
   public model() {
     //create logger
-
-
-
-    // Create a new file in the sketch directory
-    log_file = createWriter(filename); 
-
-
-
+    /*
+    File f = new File(dataPath(filename));
+    if (!f.exists()) {
+      createFile(f);
+    }
+    //output = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
+*/
     round = 1;
 
     for (int i=0; i<2; i++) {
@@ -52,8 +50,6 @@ public class model {
     log.addColumn("coinsReturned[1]");
     log.addColumn("emojiSentByParticipant");
     log.addColumn("emojiSentByComputer");
-    log.addColumn("ParticipantScore");
-    log.addColumn("ComputerScore");
     log.addColumn("TFT?");
     log.addColumn("Consistent Emotion?");
     log.addColumn("Disappointment?");
@@ -69,40 +65,37 @@ public class model {
     roundInfo.setInt("coinsReturned[1]", coinsSent[1] );
     roundInfo.setInt("emojiSentByParticipant", emoji[0]);
     roundInfo.setInt("emojiSentByComputer", emoji[1] );
-    roundInfo.setInt("ParticipantScore", score[0]);
-    roundInfo.setInt("ComputerScore", score[1] );
     roundInfo.setString("TFT?", str(TFT));
     roundInfo.setString("Consistent Emotion?", str(consistentEmotion) );
     roundInfo.setString("Disappointment?", str(dissapointmentOverAnger));
 
-    if (round==5) {
-      saveTable(log, filename); // Change according to folder structure or whatever!
-      log_file.flush(); // Writes the remaining data to the file
-      log_file.close(); // Finishes the file
+    if (round==20) {
+      saveTable(log,filename); // Change according to folder structure or whatever!
     }
   }
   /**
    * Creates a new file including all subfolders
    I DONT KNOW WHETHER I NEED TO DO THIS, so I just commented it for now.
-   private void createFile(File f) {
-   File parentDir = f.getParentFile();
-   try {
-   parentDir.mkdirs(); 
-   f.createNewFile();
-   }
-   catch(Exception e) {
-   e.printStackTrace();
-   }
-   }   
-   */
+  private void createFile(File f) {
+    File parentDir = f.getParentFile();
+    try {
+      parentDir.mkdirs();
+      f.createNewFile();
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+  }
+*/
   private void resetCoinInfo() {
     for (int i=0; i<2; i++) {
-      coinsSent[i]=10;
+      coinsSent[i]=0;
       coinsReturned[i]=0;
     }
   }
 
-  public int getCurrentRound(){
+  public int getCurrentRound()
+  {
     return round;
   }
   /*
@@ -132,13 +125,12 @@ public class model {
       score[0]+= coinsSent[1]-coinsReturned[0]+2*coinsReturned[1];
       score[1]+= coinsSent[0]-coinsReturned[1]+2*coinsReturned[0];
     }
+    println("Score Participant" + score[0] + " Score Computer " + score[1]);
   }
 
   public void increaseRound() {
     round+=1;
-    log();
-    updateScore();
-    resetCoinInfo();
+    //resetCoinInfo();
   }
 
 
@@ -156,18 +148,14 @@ public class model {
   public int EmojiFromComputer(int part) {
     int computerEmojiIndex=0, difference;
     // determine emoji to send for part 1 or part 2
-    if ( part ==1 ){
-      difference = coinsSent[1] - coinsSent[0];
-    }
-    else{
-      difference =int (((float(coinsReturned[1])/float(coinsSent[0]))- (float(coinsReturned[0])/float(coinsSent[1])))*10);
-    }
-    println("Difference "+ difference);
+    if ( part ==1 ) difference = coinsSent[1] - coinsSent[0];
+    else difference =int (((coinsReturned[1]/coinsSent[0])- (coinsReturned[0]/coinsSent[1]))*10);
+
     if (consistentEmotion) {
       if (difference>=-2 && difference<=0) computerEmojiIndex = 0; // happy
       else if (difference<-2) computerEmojiIndex = 1; // guilty
       else if (difference<=3 && difference>0) { // moderate anger or dissapointment
-        if (dissapointmentOverAnger) computerEmojiIndex = 2; 
+        if (dissapointmentOverAnger) computerEmojiIndex = 2;
         else computerEmojiIndex = 4;
       } else if (difference>3) { // intense anger or dissapointment
         if (dissapointmentOverAnger) computerEmojiIndex = 3;
@@ -176,9 +164,8 @@ public class model {
     } else { // inconsistent(random) emotions
       computerEmojiIndex = int (random(6));
     }
-    println("Computer Emotion "+ computerEmojiIndex);
     emoji[1]= computerEmojiIndex;
-    return emoji[1];
+    return computerEmojiIndex;
   }
   /*
   Helper functions for transferring data to UI
@@ -221,11 +208,11 @@ public class model {
   This is for part 1
    Two modes of operation here:
    1. Tit for tat (TFT)
-   2. Random 
+   2. Random
    */
 
   private int determineNumberCoinGive() {
-    if (round==1) coinsSent[1] = getRandomValue() ;
+    if(round==1) coinsSent[1] = getRandomValue() ;
     else if (TFT) {
       int add_value = getNoiseTFT();
       coinsSent[1] = add_value + coinsSentPreviousRound;
@@ -247,9 +234,10 @@ public class model {
   private int determineNumCoinReturn() {
     float computerReturnRatio;
     float opponentReturnRatio =(float(coinsReturned[0])/float(coinsSent[1]));
-    if (round==11) {
+    if(round==11){
       coinsReturned[1] = int(getRandomValue()*0.1*coinsSent[0]);
-    } else if (TFT) {
+    }
+    else if (TFT) {
       float noise = getNoiseTFT()*0.1;
       computerReturnRatio = coinsReturnedPreviousRoundRatio + noise;
       if (computerReturnRatio <= 0) computerReturnRatio = 0;
