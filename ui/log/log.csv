@@ -1,9 +1,0 @@
-round,coinsSentByParticipant,coinsSentByComputer,coinsReturnedByParticipant,coinsReturned[1],emojiSentByParticipant,emojiSentByComputer,ParticipantScore,ComputerScore,TFT?,Consistent Emotion?,Disappointment?
-2,1,10,1,10,0,3,10,1,true,true,true
-2,10,10,10,10,0,3,30,12,true,true,true
-3,2,0,2,0,0,0,40,14,true,true,true
-3,10,10,10,10,0,0,50,26,true,true,true
-4,3,1,3,1,0,0,61,32,true,true,true
-4,10,10,10,10,0,0,72,45,true,true,true
-5,2,4,2,4,0,2,86,49,true,true,true
-5,10,10,10,10,0,2,100,61,true,true,true
