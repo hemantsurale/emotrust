@@ -38,7 +38,7 @@ void setup()
   initRounds(1, 6);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
-  time = 1;            // screen white out time, after player has sent the coins.
+  time = ceil(random(20, 30));            // screen white out time, after player has sent the coins.
   changeSetting();
 }
 
@@ -88,7 +88,7 @@ void draw()
 
     // emotion panel
     fill(255);
-    text("Emoji", 80, 90);
+    text("Emotion", 80, 90);
     fill(255, 20);
     stroke(0, 0);
     rect(20, 50, 
@@ -161,7 +161,7 @@ void mousePressed()
       {
         e[j].ItzMe(true);
         e[j].gotoXY(e[j].point1.x, e[j].point1.y, 
-          (int) (displayWidth * 0.4), (int)(displayHeight * 0.4));
+          (int) (displayWidth * 0.3), (int)(displayHeight * 0.45));
       } else if (e[j].isItMe() && is_someone_hit)
       {
         e[j].goBackToBase(sizeofFace, sizeofFace);
@@ -194,13 +194,13 @@ void paintCanvas()
   {
     textSize(40);
     text("Round: " + m.getCurrentRound() + " " 
-      + instruction[state], displayWidth * 0.35, displayHeight * 0.3); 
+      + instruction[state], displayWidth * 0.4, displayHeight * 0.3); 
     sayIt(state);
   } else
   {
     textSize(40);
     text("Round: " + m.getCurrentRound() + " "
-      + instruction[state], displayWidth * 0.35, displayHeight * 0.3); 
+      + instruction[state], displayWidth * 0.4, displayHeight * 0.3); 
     sayIt(state);
   }
 
@@ -226,7 +226,7 @@ void initCanvas()
   be = new Emotion[20];
   instruction = new String[10];
   instruction[0] = "Select Coins";
-  instruction[1] = "Select Emoji";
+  instruction[1] = "Select Emotion";
   instruction[2] = "Part1 : Coins shared will be whaaat?";
   instruction[3] = "Part2 : Coins returned by opponent will double in value.";
 
