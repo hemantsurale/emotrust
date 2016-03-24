@@ -1,4 +1,4 @@
-/* //<>// //<>// //<>//
+/*  //<>//
  Affective computing project.
  Team - Shikha, Edmund, Hemant
  */
@@ -30,7 +30,10 @@ int interaction_no = 0;    // to count the interaction number for part 2
 int part1Rounds, totalRounds;
 boolean sayOnce = true;
 String[] lines, list;
+color from = color (232, 255, 62);        // progress bar
+color to = color (255, 62, 143);        
 
+int j1=720;
 void setup()
 {
   setupButton();       // initialize button parameters.
@@ -38,13 +41,13 @@ void setup()
   initRounds(1, 6);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
-  time = ceil(random(20, 30));            // screen white out time, after player has sent the coins.
+  time = ceil(random(1, 5));            // screen white out time, after player has sent the coins.
   changeSetting();
 }
 
 void draw()
 {
-  
+
   if (m.getCurrentRound() == totalRounds + 1)
     exit(); 
   if (!doNotDraw)
@@ -75,10 +78,10 @@ void draw()
     }
 
     // Draw recieved coins and emotions
-    for (j = 0; j < BCreceived /*&& BCreceived < 10*/; j++)
+    for (j = 0; j < BCreceived && time == 0 /*&& BCreceived < 10*/; j++)
       bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
 
-    if (Ereceived != -1)
+    if (Ereceived != -1 && time == 0)
       be[Ereceived].gotoXY(be[Ereceived].point1.x, be[Ereceived].point1.y, 
         (int) (displayWidth * 0.75), (int)(displayHeight * 0.45));
 
@@ -100,10 +103,12 @@ void draw()
     }
   } else 
   {
+    fill(0);
+    rect(0, 0, displayWidth, displayHeight);
     if (time != 0)
     {
-      delay(time--);
-      rect(0, 0, displayWidth, displayHeight);
+      drawWaitingBar();
+      time--;
       send_b.hide();
     } else
     {
@@ -307,4 +312,22 @@ void changeSetting()
       m.dissapointmentOverAnger = true;
   } else 
   println("Settings Not Found!!");
+}
+
+void drawWaitingBar()
+{
+  for (int i=1; i<height; i++)
+  {
+    color interA;
+    stroke(#ffffff);
+    text("Waiting for the opponent!!", width* 0.4, j1 - 20);
+    interA = lerpColor(from, to, (float(i)/height));
+    noStroke();
+    fill(interA);
+    rect(0, i, width, i/j1);
+  }
+  
+  j1--;
+  if (j1<10) 
+    j1=10;
 }

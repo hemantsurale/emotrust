@@ -1,4 +1,4 @@
-import controlP5.*;  //<>// //<>// //<>// //<>//
+import controlP5.*;   //<>//
 
 ControlP5 ui;
 Button send_b;
@@ -67,6 +67,7 @@ void controlEvent(ControlEvent ev)
     {
       // start the white out screen.
       doNotDraw = true;
+      time = ceil(random(1, 5));
 
       if (m.getCurrentRound() <= part1Rounds)
       {
@@ -84,15 +85,15 @@ void controlEvent(ControlEvent ev)
       {
         if (interaction_no == 0)
         {
-
+          //doNotDraw = true;
           println("interaction 1");
           coinNo = selectCoins(1);
           m.getCoinsSentByOpponent(coinNo);
-          println("Coins selected I1 - " + coinNo);
+          println("Coins selected I1: " + coinNo);
           BCreceived = m.determineNumberCoinGive();
           deSelectBC(BCreceived);
           deSelectAllBC();
-          println("Coins received I1 - " + BCreceived);
+          println("Coins received I1: " + BCreceived);
           lockAllOwn(true);
           Ereceived = -1;
           interaction_no = 1;
@@ -101,11 +102,11 @@ void controlEvent(ControlEvent ev)
           println("interaction 2");
           coinNo = selectCoins(2);
           m.getCoinsReturnedByOpponent(coinNo);
-          println("Coins selected I2 - " + coinNo);
+          println("Coins selected I2: " + coinNo);
           BCreceived = m.determineNumCoinReturn();
-          println("Coins received I2 - " + BCreceived);
+          println("Coins received I2: " + BCreceived);
           temp1 = m.sendEmoToOpponent();
-          println("Emoji received I2 -" + temp1);
+          println("Emoji received I2: " + temp1);
           deSelectBC(BCreceived);
           lockAllBC(true);
           lockAllOwn(true);
@@ -196,7 +197,7 @@ void deSelectBC(int no)
     //bc[x].changefilter('i');
   }
 
-  for (j = 0; j < no; j++)
+  for (j = 0; j < no && time == 0; j++)
   {
     bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
   }
