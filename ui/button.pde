@@ -59,7 +59,7 @@ void controlEvent(ControlEvent ev)
       Ereceived = temp1;
       println("Eid:" + temp1);
       interaction_no = 0;
-      m.updateScore();
+     // m.updateScore();
       m.log();
     }
 
@@ -91,7 +91,7 @@ void controlEvent(ControlEvent ev)
           println("interaction 1");
           coinNo = selectCoins(1);
           m.getCoinsSentByOpponent(coinNo);
-          m.updateScore();
+         // m.updateScore();
           println("Coins selected I1: " + coinNo);
           BCreceived = m.determineNumberCoinGive();
           deSelectBC(BCreceived);
@@ -105,9 +105,10 @@ void controlEvent(ControlEvent ev)
           println("interaction 2: ");
           coinNo = selectCoins(2);
           m.getCoinsReturnedByOpponent(coinNo);
-          m.updateScore();
+          
           println("Coins selected I2: " + coinNo);
           BCreceived = m.determineNumCoinReturn();
+          m.updateScore();
           println("Coins received I2: " + BCreceived);
           temp1 = m.sendEmoToOpponent();
           println("Emoji received I2: " + temp1);
