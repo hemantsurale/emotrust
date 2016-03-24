@@ -38,7 +38,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(1, 3);    // part1Rounds, totalRounds.
+  initRounds(2, 5);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = ceil(random(1, 5));            // screen white out time, after player has sent the coins.
@@ -175,7 +175,7 @@ void mousePressed()
       {
         e[j].ItzMe(true);
         e[j].gotoXY(e[j].point1.x, e[j].point1.y, 
-          (int) (displayWidth * 0.3), (int)(displayHeight * 0.40));
+          (int) (displayWidth * 0.3), (int)(displayHeight * 0.45));
       } else if (e[j].isItMe() && is_someone_hit)
       {
         e[j].goBackToBase(sizeofFace, sizeofFace);
