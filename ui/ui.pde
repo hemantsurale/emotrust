@@ -207,14 +207,14 @@ void paintCanvas()
   if (state == 0)
   {
     textSize(40);
-    text("Round: " + m.getCurrentRound() + " " 
-      + instruction[state], displayWidth * 0.4, displayHeight * 0.3); 
+    text("Round " + m.getCurrentRound() + ": " 
+      + instruction[state], displayWidth * 0.25, displayHeight * 0.25); 
     sayIt(state);
   } else
   {
     textSize(40);
-    text("Round: " + m.getCurrentRound() + " "
-      + instruction[state], displayWidth * 0.4, displayHeight * 0.3); 
+    text("Round " + m.getCurrentRound() + ": "
+      + instruction[state], displayWidth * 0.25, displayHeight * 0.25); 
     sayIt(state);
   }
 
