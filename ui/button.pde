@@ -1,4 +1,4 @@
-import controlP5.*;   //<>//
+import controlP5.*;   //<>// //<>//
 
 ControlP5 ui;
 Button send_b;
@@ -17,7 +17,6 @@ void setupButton()
     .setSize( 400, 100 )
     .setColorBackground(#7A5230)
     .setColorActive(#AA7243);
-
 }
 
 void controlEvent(ControlEvent ev)
@@ -59,8 +58,10 @@ void controlEvent(ControlEvent ev)
       Ereceived = temp1;
       println("Eid:" + temp1);
       interaction_no = 0;
-     // m.updateScore();
+      // m.updateScore();
       m.log();
+      doNotDraw = true;
+      time = ceil(random(1, 5));
     }
 
     if ( state == 0)
@@ -73,7 +74,7 @@ void controlEvent(ControlEvent ev)
       {
         coinNo = selectCoins(1);
         m.getCoinsSentByOpponent(coinNo);
-        
+
         println("Coins selected: " + coinNo);
         BCreceived = m.sendCoinsToOpponent();
         println("Coins received P1: " + BCreceived);
@@ -91,7 +92,7 @@ void controlEvent(ControlEvent ev)
           println("interaction 1");
           coinNo = selectCoins(1);
           m.getCoinsSentByOpponent(coinNo);
-         // m.updateScore();
+          // m.updateScore();
           println("Coins selected I1: " + coinNo);
           BCreceived = m.determineNumberCoinGive();
           deSelectBC(BCreceived);
