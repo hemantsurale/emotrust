@@ -32,8 +32,8 @@ boolean sayOnce = true, showInstructions = true;
 String[] lines, list;
 color from = color (232, 255, 62);        // progress bar
 color to = color (255, 62, 143);        
+int j1 = 720;                             // progress bar total frames
 
-int j1=720;
 void setup()
 {
   setupButton();       // initialize button parameters.
@@ -356,8 +356,10 @@ void displayInstructions(int when)
       "\t\nStep 2: Select coins to be returned to the opponent, returned coins double in value." +
       "\t\nStep 3: Exchange emotions with the opponent.", 
       width * 0.1, height * 0.4);
-    text("\t\n\nSCORE HIGH, you will be ranked based on your score in the game.", 
+    fill(255, 0, 0);
+    text("\t\n\nTAKE YOUR OWN TIME AND SCORE HIGH, \n you will be ranked based on your score in the game.", 
       width * 0.2, height * 0.65);
+    fill(255, 255, 255);
     text("Read all instructions? if yes, press 'spacebar'. \nAll the best!!", 
       width * 0.6, height * 0.8);
     send_b.hide();
@@ -377,8 +379,10 @@ void displayInstructions(int when)
     text("Thanks for participating in the study.\n\n Kindly notify the researcher \n and wait for" + 
       " further interstuction.", 
       width * 0.3, height * 0.2);
+    fill(255, 0, 0);
     text("\n\nPlease press spacebar to exit.", 
       width * 0.6, height * 0.8);
+      fill(255, 255, 255);
     send_b.hide();
     if (keyPressed)
       if (key == ' ') {
