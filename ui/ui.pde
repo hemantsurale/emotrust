@@ -28,7 +28,7 @@ String[] instruction;
 int faceCount = 6, BCreceived  = 0, Ereceived = -1;
 int interaction_no = 0;    // to count the interaction number for part 2
 int part1Rounds, totalRounds;
-boolean sayOnce = true;
+boolean sayOnce = true, showInstructions = true;
 String[] lines, list;
 color from = color (232, 255, 62);        // progress bar
 color to = color (255, 62, 143);        
@@ -38,7 +38,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(1, 6);    // part1Rounds, totalRounds.
+  initRounds(1, 2);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = ceil(random(1, 5));            // screen white out time, after player has sent the coins.
@@ -47,73 +47,82 @@ void setup()
 
 void draw()
 {
-
-  if (m.getCurrentRound() == totalRounds + 1)
-    exit(); 
-  if (!doNotDraw)
+  if (showInstructions == true)
   {
-    if (state == 2)
+    displayInstructions(1);
+  } else
+  {
+    if (m.getCurrentRound() == totalRounds + 1)
     {
-      for (i1 = 0; i1 < 10; i1++)
+      displayInstructions(2);
+    } else 
+    {
+      if (!doNotDraw)
       {
-        if (c[i1].isSelected())
-          c[i1].isItMe(false);
-        c[i1].point1.x = c[i1].basepoint.x;
-        c[i1].point1.y = c[i1].basepoint.y;
+        if (state == 2)
+        {
+          for (i1 = 0; i1 < 10; i1++)
+          {
+            if (c[i1].isSelected())
+              c[i1].isItMe(false);
+            c[i1].point1.x = c[i1].basepoint.x;
+            c[i1].point1.y = c[i1].basepoint.y;
+          }
+          state = 0;
+        }
+        paintCanvas();
+
+        // draw available coins
+        noStroke();
+        fill(255, 0, 0, 128);
+        for (j = 0; j < 10; j++)
+          c[j].draw(c[j].point1.x, c[j].point1.y, size, size);
+
+        if (BCreceived >= 10)
+        {
+          BCreceived = 9;
+          println("More than 10 coins received");
+        }
+
+        // Draw recieved coins and emotions
+        for (j = 0; j < BCreceived && time == 0 /*&& BCreceived < 10*/; j++)
+          bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
+
+        if (Ereceived != -1 && time == 0)
+          be[Ereceived].gotoXY(be[Ereceived].point1.x, be[Ereceived].point1.y, 
+            (int) (displayWidth * 0.75), (int)(displayHeight * 0.45));
+
+        stroke(255, 0, 0, 128);
+        strokeWeight(2);
+        noFill();
+
+        // emotion panel
+        fill(255);
+        text("Emotion", 80, 90);
+        fill(255, 20);
+        stroke(0, 0);
+        rect(20, 50, 
+          displayWidth * 0.1, displayHeight - 150);
+        for (j = 0; j < faceCount; j++)
+        {
+          e[j].draw(e[j].point1.x, e[j].point1.y, sizeofFace, sizeofFace);
+          e[j].animate(time);
+        }
+      } else 
+      {
+        fill(0);
+        rect(0, 0, displayWidth, displayHeight);
+        if (time != 0)
+        {
+          drawWaitingBar();
+          time--;
+          send_b.hide();
+        } else
+        {
+          doNotDraw = false;
+          send_b.show();
+        }
       }
-      state = 0;
-    }
-    paintCanvas();
-
-    // draw available coins
-    noStroke();
-    fill(255, 0, 0, 128);
-    for (j = 0; j < 10; j++)
-      c[j].draw(c[j].point1.x, c[j].point1.y, size, size);
-
-    if (BCreceived >= 10)
-    {
-      BCreceived = 9;
-      println("More than 10 coins received");
-    }
-
-    // Draw recieved coins and emotions
-    for (j = 0; j < BCreceived && time == 0 /*&& BCreceived < 10*/; j++)
-      bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
-
-    if (Ereceived != -1 && time == 0)
-      be[Ereceived].gotoXY(be[Ereceived].point1.x, be[Ereceived].point1.y, 
-        (int) (displayWidth * 0.75), (int)(displayHeight * 0.45));
-
-    stroke(255, 0, 0, 128);
-    strokeWeight(2);
-    noFill();
-
-    // emotion panel
-    fill(255);
-    text("Emotion", 80, 90);
-    fill(255, 20);
-    stroke(0, 0);
-    rect(20, 50, 
-      displayWidth * 0.1, displayHeight - 150);
-    for (j = 0; j < faceCount; j++)
-    {
-      e[j].draw(e[j].point1.x, e[j].point1.y, sizeofFace, sizeofFace);
-      e[j].animate(time);
-    }
-  } else 
-  {
-    fill(0);
-    rect(0, 0, displayWidth, displayHeight);
-    if (time != 0)
-    {
-      drawWaitingBar();
-      time--;
-      send_b.hide();
-    } else
-    {
-      doNotDraw = false;
-      send_b.show();
     }
   }
 }
@@ -326,8 +335,55 @@ void drawWaitingBar()
     fill(interA);
     rect(0, i, width, i/j1);
   }
-  
+
   j1--;
   if (j1<10) 
     j1=10;
+}
+
+// when = 1, means at the start of the game. 
+// when = 2, means at the end of the game.
+void displayInstructions(int when)
+{
+  if (when == 1)
+  {
+    background(0);
+    color(0, 255, 0);
+    // Add instructions before start of the game.
+    text("Game Rules: \n\n Part 1:  \t\n\nStep 1: Exchange coins with the opponent." +
+      "\t\nStep 2: Exchange emotions with the opponent.", 
+      width * 0.1, height * 0.2);
+    text("\t\n\nPart 2:  \t\n\nStep 1: Exchange coins with the opponent." +
+      "\t\nStep 2: Select coins to be returned to the opponent, returned coins double in value." +
+      "\t\nStep 3: Exchange emotions with the opponent.", 
+      width * 0.2, height * 0.4);
+    text("Please press spacebar to start the game. All the best!! :) ", 
+      width * 0.6, height * 0.8);
+    send_b.hide();
+    if (keyPressed)
+      if (key == ' ') {
+        showInstructions = false;
+        send_b.show();
+      }
+    when = 0;
+  }
+  if (when == 2)
+  {
+    background(0);
+    stroke(#00ff00);
+    fill(255, 255, 255);
+    // Add instructions before start of the game.
+    text("Thanks for participating in the study.\n\n Kindly notify the researcher \n and wait for" + 
+      " further interstuction.", 
+      width * 0.3, height * 0.2);
+    text("\n\nPlease press spacebar to exit.", 
+      width * 0.6, height * 0.8);
+    send_b.hide();
+    if (keyPressed)
+      if (key == ' ') {
+        send_b.show();
+        exit();
+      }
+    when = 0;
+  }
 }
