@@ -1,4 +1,4 @@
-/*  //<>// //<>//
+/*  //<>// //<>// //<>//
  Affective computing project.
  Team - Shikha, Edmund, Hemant
  */
@@ -38,7 +38,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(0,20);    // part1Rounds, totalRounds.
+  initRounds(0, 20);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = ceil(random(1, 5));            // screen white out time, after player has sent the coins.
@@ -206,10 +206,19 @@ void paintCanvas()
 
   if (state == 0)
   {
-    textSize(40);
-    text("Round " + m.getCurrentRound() + ": " 
-      + instruction[state], displayWidth * 0.25, displayHeight * 0.25); 
-    sayIt(state);
+    if (interaction_no == 1)
+    {
+      sayIt(3);
+      textSize(40);
+      text("Round " + m.getCurrentRound() + ": "
+        + instruction[state], displayWidth * 0.25, displayHeight * 0.25);
+    } else
+    {
+      textSize(40);
+      text("Round " + m.getCurrentRound() + ": " 
+        + instruction[state], displayWidth * 0.25, displayHeight * 0.25); 
+      sayIt(state);
+    }
   } else
   {
     textSize(40);
@@ -382,7 +391,7 @@ void displayInstructions(int when)
     fill(255, 0, 0);
     text("\n\nPlease press spacebar to exit.", 
       width * 0.6, height * 0.8);
-      fill(255, 255, 255);
+    fill(255, 255, 255);
     send_b.hide();
     if (keyPressed)
       if (key == ' ') {
