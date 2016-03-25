@@ -28,7 +28,7 @@ String[] instruction;
 int faceCount = 6, BCreceived  = 0, Ereceived = -1;
 int interaction_no = 0;    // to count the interaction number for part 2
 int part1Rounds, totalRounds;
-boolean sayOnce = true, showInstructions = true;
+boolean sayOnce = true, showInstructions = true, nextRound = false, part2start = false;
 String[] lines, list;
 color from = color (232, 255, 62);        // progress bar
 color to = color (255, 62, 143);        
@@ -38,7 +38,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(0, 20);    // part1Rounds, totalRounds.
+  initRounds(1, 3);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = ceil(random(1, 5));            // screen white out time, after player has sent the coins.
@@ -55,6 +55,9 @@ void draw()
     if (m.getCurrentRound() == totalRounds + 1)
     {
       displayInstructions(2);
+    } else if (m.getCurrentRound() == part1Rounds + 1 && part2start == false)
+    {
+      displayInstructions(3);
     } else 
     {
       if (!doNotDraw)
@@ -88,10 +91,19 @@ void draw()
         for (j = 0; j < BCreceived && time == 0 /*&& BCreceived < 10*/; j++)
           bc[j].draw(bc[j].point1.x, bc[j].point1.y, size, size);
 
-        if (Ereceived != -1 && time == 0)
+        if (Ereceived != -1 && time == 0 && nextRound == true)
+        {
+          fill(255, 255, 255);
+          text("Emotions received", (int) (displayWidth * 0.61), (int)(displayHeight * 0.30));
           be[Ereceived].gotoXY(be[Ereceived].point1.x, be[Ereceived].point1.y, 
             (int) (displayWidth * 0.75), (int)(displayHeight * 0.45));
-
+        } 
+        else
+        {
+          fill(255);
+          text("Coins recieved " + BCreceived, (int)(180 + displayWidth * 0.51), 
+            (int)(displayHeight * 0.71) - 30);
+        }
         stroke(255, 0, 0, 128);
         strokeWeight(2);
         noFill();
@@ -161,7 +173,7 @@ void mousePressed()
 
     // do the face hit-testing here.
     // somebodyz hit
-    for (j = 0; j<faceCount; j++)
+    for (j = 0; j<faceCount  && state == 1; j++)
       if (e[j].isHit(mouseX, mouseY, sizeofFace, sizeofFace))
       {
         is_someone_hit = true;
@@ -169,7 +181,7 @@ void mousePressed()
         //time = millis();
       }
 
-    for (j = 0; j<faceCount; j++)
+    for (j = 0; j<faceCount && state == 1; j++)
     {
       if (e[j].isHit(mouseX, mouseY, sizeofFace, sizeofFace))
       {
@@ -199,8 +211,7 @@ void paintCanvas()
   image(gameName, displayWidth * 0.3, 0);
 
   textSize(35);
-  text("Coins recieved", (int)(180 + displayWidth * 0.51), 
-    (int)(displayHeight * 0.71) - 30);
+
   text("Your coins", (int)(50 + displayWidth * 0.15), 
     (int)(displayHeight * 0.71) - 30);
 
@@ -379,15 +390,15 @@ void displayInstructions(int when)
       }
     when = 0;
   }
+
   if (when == 2)
   {
     background(0);
     stroke(#00ff00);
     fill(255, 255, 255);
     // Add instructions before start of the game.
-    text("Thanks for participating in the study.\n\n Kindly notify the researcher \n and wait for" + 
-      " further interstuction.", 
-      width * 0.3, height * 0.2);
+    text("\t\n\nThank you for participating in the study.\nWait for further instructions.", 
+      width * 0.1, height * 0.4);
     fill(255, 0, 0);
     text("\n\nPlease press spacebar to exit.", 
       width * 0.6, height * 0.8);
@@ -397,6 +408,31 @@ void displayInstructions(int when)
       if (key == ' ') {
         send_b.show();
         exit();
+      }
+    when = 0;
+  }
+
+  if (when == 3)
+  {
+    background(0);
+    stroke(#00ff00);
+    fill(255, 255, 255);
+    // Add instructions before start of the game.
+    text("\t\n\nPart 2:  \t\n\nStep 1: Exchange coins with the opponent." +
+      "\t\nStep 2: Select coins to be returned to the opponent, returned coins double in value." +
+      "\t\nStep 3: Exchange emotions with the opponent.", 
+      width * 0.1, height * 0.4);
+    fill(255, 0, 0);
+    text("\n\nPlease press spacebar to continue...", 
+      width * 0.6, height * 0.8);
+    fill(255, 255, 255);
+    send_b.hide();
+    if (keyPressed)
+      if (key == ' ') {
+        send_b.show();
+        part2start = true;
+        doNotDraw = false;
+        showInstructions = false;
       }
     when = 0;
   }
