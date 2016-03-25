@@ -114,7 +114,6 @@ void controlEvent(ControlEvent ev)
               return;
             }
           }
-          
           m.getCoinsSentByOpponent(coinNo);
           println("Coins selected I1: " + coinNo);
           BCreceived = m.determineNumberCoinGive();
@@ -134,14 +133,12 @@ void controlEvent(ControlEvent ev)
           //coinNo = selectCoins(2);
           //if (coinNo == 0)
           //{
-          //  if (MegBoxYN("Do you really want to share 0 coins?", "Confirm") == 0)
-          //  {
-          //    doNotDraw = false;
-          //    return;
-          //  }
+           if (MegBoxYN("Do you want to return coins?", "Confirm") == 1)
+             m.getCoinsReturnedByOpponent(allcoins);
+           else 
           //}
           //m.getCoinsReturnedByOpponent(coinNo);
-          m.getCoinsReturnedByOpponent(allcoins);
+          m.getCoinsReturnedByOpponent(0);
           //println("Coins selected I2: " + coinNo);
           println("Coins selected I2: " + allcoins);
           BCreceived = m.determineNumCoinReturn();
