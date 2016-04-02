@@ -119,8 +119,8 @@ public class model {
    */
   public void updateScore() {
     if (round<=10) {
-      score[0] = score[0] + coinsSent[1] + (10-coinsSent[0]); // score of participant
-      score[1]= score[0] + coinsSent[0] + (10-coinsSent[1]); // score of computer
+      score[0] = score[0] + coinsSent[1]; // score of participant
+      score[1]= score[0] + coinsSent[0] ; // score of computer
     } else {
       score[0]=(10-coinsSent[0])+ score[0] + (coinsSent[1]-coinsReturned[0]) + 2*coinsReturned[1];
       score[1]=(10-coinsSent[0])+ score[1] + coinsSent[0]-coinsReturned[1] + 2*coinsReturned[0];
