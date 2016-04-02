@@ -15,7 +15,7 @@ public class model {
   public int[] coinsRecievedPreviousRound= new int[2];
   public int[] coinsSent= new int[2]; //coinsSent[0] -> number of coins sent BY opponent, coinsSent[1]-> coins sent BY Computer
   public int[] coinsReturned = new int[2]; //coinsReturned[0] -> number of coins returned BY opponent, [1]-> coins returned BY Computer
-  private float coinsReturnedPreviousRoundRatio;
+  private boolean coinsReturnedLastRound ; // did opponent return coins in last round?
   private int[]emoji = new int[2]; // keeps track of the emoji
   private String filename = ""; /************ NEED TO SET THIS **************/
   private boolean TFT; // this variable specifies whther the current execution is in Tit for tat mode or random mode, need a way to set this.
@@ -27,11 +27,11 @@ public class model {
     //create logger
     /*
     File f = new File(dataPath(filename));
-    if (!f.exists()) {
-      createFile(f);
-    }
-    //output = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
-*/
+     if (!f.exists()) {
+     createFile(f);
+     }
+     //output = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
+     */
     round = 1;
 
     for (int i=0; i<2; i++) {
@@ -70,23 +70,23 @@ public class model {
     roundInfo.setString("Disappointment?", str(dissapointmentOverAnger));
 
     if (round==20) {
-      saveTable(log,filename); // Change according to folder structure or whatever!
+      saveTable(log, filename); // Change according to folder structure or whatever!
     }
   }
   /**
    * Creates a new file including all subfolders
    I DONT KNOW WHETHER I NEED TO DO THIS, so I just commented it for now.
-  private void createFile(File f) {
-    File parentDir = f.getParentFile();
-    try {
-      parentDir.mkdirs();
-      f.createNewFile();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-  }
-*/
+   private void createFile(File f) {
+   File parentDir = f.getParentFile();
+   try {
+   parentDir.mkdirs();
+   f.createNewFile();
+   }
+   catch(Exception e) {
+   e.printStackTrace();
+   }
+   }
+   */
   private void resetCoinInfo() {
     for (int i=0; i<2; i++) {
       coinsSent[i]=0;
@@ -118,14 +118,18 @@ public class model {
    }
    */
   public void updateScore() {
+
     if (round<=10) {
-      score[0] = score[0] + coinsSent[1]; // score of participant
-      score[1]= score[0] + coinsSent[0] ; // score of computer
+      score[0]+= coinsSent[1]; // score of participant
+      score[1]+= coinsSent[0] ; // score of computer
     } else {
-      score[0]=(10-coinsSent[0])+ score[0] + (coinsSent[1]-coinsReturned[0]) + 2*coinsReturned[1];
-      score[1]=(10-coinsSent[0])+ score[1] + coinsSent[0]-coinsReturned[1] + 2*coinsReturned[0];
+      score[0]+= 10 - coinsSent[0] + 2*coinsReturned[1];
+      score[1]+= 10 - coinsSent[1] + 2*coinsReturned[0];
     }
-    println("Score Participant" + score[0] + " Score Computer " + score[1]);
+
+    println("Score Participant: " + score[0] + " Score Computer " + score[1]);
+    coinsReturnedLastRound = (coinsReturned[0]!=0);
+    println("Coins returned by Participant: "+ str(coinsReturnedLastRound));
   }
 
   public void increaseRound() {
@@ -147,22 +151,28 @@ public class model {
 
   public int EmojiFromComputer(int part) {
     int computerEmojiIndex=0, difference;
-    // determine emoji to send for part 1 or part 2
-    if ( part ==1 ) difference = coinsSent[1] - coinsSent[0];
-    else difference =int ((float(coinsReturned[1]/coinsSent[0])- float(coinsReturned[0]/coinsSent[1]))*10);
-
-    if (consistentEmotion) {
-      if (difference>=-2 && difference<=0) computerEmojiIndex = 0; // happy
-      else if (difference<-2) computerEmojiIndex = 1; // guilty
-      else if (difference<=3 && difference>0) { // moderate anger or dissapointment
+    if ( part ==1 ) { 
+      difference = coinsSent[1] - coinsSent[0];
+      if (consistentEmotion) {
+        if (difference>=-2 && difference<=0) computerEmojiIndex = 0; // happy
+        else if (difference<-2) computerEmojiIndex = 1; // guilty
+        else if (difference<=3 && difference>0) { // moderate anger or dissapointment
+          if (dissapointmentOverAnger) computerEmojiIndex = 2;
+          else computerEmojiIndex = 4;
+        } else if (difference>3) { // intense anger or dissapointment
+          if (dissapointmentOverAnger) computerEmojiIndex = 3;
+          else computerEmojiIndex = 5;
+        }
+      } else { // inconsistent(random) emotions
+        computerEmojiIndex = int (random(6));
+      }
+    } else { //part 2
+      if (coinsReturned[0]==0) {
         if (dissapointmentOverAnger) computerEmojiIndex = 2;
         else computerEmojiIndex = 4;
-      } else if (difference>3) { // intense anger or dissapointment
-        if (dissapointmentOverAnger) computerEmojiIndex = 3;
-        else computerEmojiIndex = 5;
+      } else {
+        computerEmojiIndex = 0;
       }
-    } else { // inconsistent(random) emotions
-      computerEmojiIndex = int (random(6));
     }
     emoji[1]= computerEmojiIndex;
     return computerEmojiIndex;
@@ -212,7 +222,7 @@ public class model {
    */
 
   private int determineNumberCoinGive() {
-    if(round==1) coinsSent[1] = getRandomValue() ;
+    if (round==1) coinsSent[1] = getRandomValue() ;
     else if (TFT) {
       int add_value = getNoiseTFT();
       coinsSent[1] = add_value + coinsSentPreviousRound;
@@ -232,21 +242,19 @@ public class model {
    this function will determine the number of coins to return
    */
   private int determineNumCoinReturn() {
-    float computerReturnRatio;
-    float opponentReturnRatio =(float(coinsReturned[0])/float(coinsSent[1]));
-    if(round==11){
-      coinsReturned[1] = int(getRandomValue()*0.1*coinsSent[0]);
-    }
-    else if (TFT) {
-      float noise = getNoiseTFT()*0.1;
-      computerReturnRatio = coinsReturnedPreviousRoundRatio + noise;
-      if (computerReturnRatio <= 0) computerReturnRatio = 0;
-      else if (computerReturnRatio >= 1) computerReturnRatio = 1;
-      coinsReturned[1] = int(computerReturnRatio*coinsSent[0]);
+    int[] tentativeScore= new int[2];
+    if (coinsReturnedLastRound) { // if coins were returned in last round
+      tentativeScore[0] = score[0]+ 2*coinsReturned[1] + 10 - coinsSent[0];
+      tentativeScore[1] = score[1]+ 2*coinsReturned[0] + 10 - coinsSent[1];
     } else {
-      coinsReturned[1] = int(getRandomValue()*0.1*coinsSent[0]);
+      tentativeScore[0] = score[0]+ 2*coinsSent[0] + 10 - coinsSent[0];
+      tentativeScore[1] = score[1] + 10 - coinsSent[1];
     }
-    coinsReturnedPreviousRoundRatio = opponentReturnRatio;
+    println("Tentative Scores P, C "+ tentativeScore[0]+" "+ tentativeScore[0]);
+    if (float(tentativeScore[0]) < tentativeScore[1]) coinsReturned[1] = coinsSent[0];
+    else coinsReturned[1] = 0;
+
+
     return coinsReturned[1];
   }
 }
