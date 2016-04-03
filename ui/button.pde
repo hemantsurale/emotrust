@@ -4,9 +4,9 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 ControlP5 ui;
-Button send_b;
+Button send_b, round_2;
 float send_b_x, button_y, salt;    // salt is used to control the position as needed
-boolean doNotDraw = false;
+boolean doNotDraw = false, round2Begins = false, round2InstructionShown = false;
 int temp1, allcoins;
 
 void setupButton()
@@ -20,6 +20,12 @@ void setupButton()
     .setSize( 400, 100 )
     .setColorBackground(#7A5230)
     .setColorActive(#AA7243);
+  round_2 = ui.addButton( "Next Part" )
+    .setPosition(send_b_x, button_y)
+    .setSize( 400, 100 )
+    .setColorBackground(#7A5230)
+    .setColorActive(#AA7243);
+  round_2.hide();
 }
 
 void controlEvent(ControlEvent ev)
@@ -28,7 +34,7 @@ void controlEvent(ControlEvent ev)
   boolean emo_selected = false;
   if (ev.isFrom(send_b))
   {    
-    if (state  == 1)
+    if (state  == 1)                              // state 1: coins have been sent and waiting for the player to send the emotion.
     {
       for (int j1 = 0; j1 < faceCount; j1++)
         if (e[j1].isItMe())
@@ -65,13 +71,13 @@ void controlEvent(ControlEvent ev)
       Ereceived = temp1;
       println("Eid:" + temp1);
       interaction_no = 0;
-      send_b.setLabel("RETURN");
       m.log();
+
       doNotDraw = true;
       time = ceil(random(1, 5));
     }
 
-    if ( state == 0)
+    if ( state == 0)                            // state 0: send coins to the opponent.
     {
       // start the white out screen.
       doNotDraw = true;
@@ -93,7 +99,7 @@ void controlEvent(ControlEvent ev)
         BCreceived = m.sendCoinsToOpponent();
         println("Coins received P1: " + BCreceived);
         m.updateScore();
-        deSelectAllBC();        // set received coins
+        deSelectAllBC();                // set received coins
         temp1 = m.sendEmoToOpponent();  // set emotions to be shown
         println("Emoji received: " + temp1);
         lockAllOwn(true);
@@ -101,7 +107,6 @@ void controlEvent(ControlEvent ev)
         state = 1;
       } else if ( m.getCurrentRound() <= totalRounds)
       {
-        
         if (interaction_no == 0)
         {
           println("interaction 1");
@@ -123,19 +128,17 @@ void controlEvent(ControlEvent ev)
           lockAllOwn(true);
           Ereceived = -1;
           interaction_no = 1;
-          send_b.setLabel("RETURN");
           lockAllBC(true);
           allcoins = BCreceived;
         } else if (interaction_no == 1)
         {
-          
           println("interaction 2: ");
           //coinNo = selectCoins(2);
           //if (coinNo == 0)
           //{
-           if (MegBoxYN("Do you want to return coins?", "Confirm") == 1)
-             m.getCoinsReturnedByOpponent(allcoins);
-           else 
+          if (MegBoxYN("Do you want to return coins?", "Confirm") == 1)
+            m.getCoinsReturnedByOpponent(allcoins);
+          else 
           //}
           //m.getCoinsReturnedByOpponent(coinNo);
           m.getCoinsReturnedByOpponent(0);
@@ -155,6 +158,11 @@ void controlEvent(ControlEvent ev)
       }
     }
     sayOnce = true;
+  }
+  if (ev.isFrom(round_2))
+  {
+    round2Begins = true;
+    send_b.show();
   }
 }
 

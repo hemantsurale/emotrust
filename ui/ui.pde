@@ -38,7 +38,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(10, 20);    // part1Rounds, totalRounds.
+  initRounds(3, 5);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = ceil(random(1, 5));            // screen white out time, after player has sent the coins.
@@ -50,18 +50,26 @@ void draw()
   if (showInstructions == true)
   {
     displayInstructions(1);
+  } //else if (m.getCurrentRound() == part1Rounds + 1 && part2start == false)
+  else if (round2Begins)
+  {
+    displayInstructions(3);
   } else
   {
     if (m.getCurrentRound() == totalRounds + 1)
     {
       displayInstructions(2);
-    } else if (m.getCurrentRound() == part1Rounds + 1 && part2start == false)
-    {
-      displayInstructions(3);
     } else 
     {
       if (!doNotDraw)
       {
+        if (m.getCurrentRound() == part1Rounds + 1 && round2InstructionShown == false)
+        {
+          send_b.hide();
+          //lockAllBC(true);
+          lockAllOwn(true);
+          round_2.show();
+        }
         if (state == 2)
         {
           for (i1 = 0; i1 < 10; i1++)
@@ -97,8 +105,7 @@ void draw()
           text("Emotions received", (int) (displayWidth * 0.61), (int)(displayHeight * 0.30));
           be[Ereceived].gotoXY(be[Ereceived].point1.x, be[Ereceived].point1.y, 
             (int) (displayWidth * 0.75), (int)(displayHeight * 0.45));
-        } 
-        else
+        } else
         {
           fill(255);
           text("Coins recieved " + BCreceived, (int)(180 + displayWidth * 0.51), 
@@ -241,7 +248,12 @@ void paintCanvas()
   if (m.getCurrentRound() <= part1Rounds)
     text(instruction[2], displayWidth * 0.25, displayHeight * 0.2);
   if (m.getCurrentRound() > part1Rounds)
-    text(instruction[3], displayWidth * 0.25, displayHeight * 0.2); 
+    text(instruction[3], displayWidth * 0.25, displayHeight * 0.2);
+
+  if (state == 1)
+    send_b.setLabel("SEND");
+  else if (interaction_no == 1)
+    send_b.setLabel("Make Return Decison");
 
   textSize(35);
 
@@ -414,6 +426,7 @@ void displayInstructions(int when)
 
   if (when == 3)
   {
+    round_2.hide();
     background(0);
     stroke(#00ff00);
     fill(255, 255, 255);
@@ -433,6 +446,11 @@ void displayInstructions(int when)
         part2start = true;
         doNotDraw = false;
         showInstructions = false;
+        round2Begins = false;
+        Ereceived = -1;
+        round_2.hide();
+        round2InstructionShown = true;
+        lockAllOwn(false);
       }
     when = 0;
   }
