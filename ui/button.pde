@@ -20,7 +20,7 @@ void setupButton()
     .setSize( 400, 100 )
     .setColorBackground(#7A5230)
     .setColorActive(#AA7243);
-  round_2 = ui.addButton( "Next Part" )
+  round_2 = ui.addButton( "Continue To Part 2" )
     .setPosition(send_b_x, button_y)
     .setSize( 400, 100 )
     .setColorBackground(#7A5230)

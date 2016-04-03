@@ -16,11 +16,11 @@ Minim minim;
 AudioPlayer msg;
 String fn;
 File ddf;
-PImage bg, coins, gameName;       // image objects of canvas and coins
+PImage bg, coins, gameName;       // image objects of canvas and coins.
 PFont font;
 Coins[] c, bc;              // object declaration ownCoins and BlueCoins.
 Emotion[] e, be;            // BlueEmotions by the opponent.
-model m;                    // model initialization
+model m;                    // model initialization.
 int i1, j, dist = ceil(0.03 * displayWidth), x, size = 50, sizeofFace = 100;
 int state = 0, status = 0;              // State: 1 if coins are sent.
 int time;
@@ -38,7 +38,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(3, 5);    // part1Rounds, totalRounds.
+  initRounds(1, 3);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = ceil(random(1, 5));            // screen white out time, after player has sent the coins.
