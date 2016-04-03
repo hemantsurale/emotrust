@@ -90,7 +90,7 @@ void controlEvent(ControlEvent ev)
         coinNo = selectCoins(1);
         if (coinNo == 0)
         {
-          if (MegBoxYN("Do you really want to share 0 coins?", "Confirm") == 0)
+          if (MegBoxYN("Do you really want to share 0 coins?", "Confirm") <= 0)
           {
             doNotDraw = false;
             return;
@@ -116,7 +116,7 @@ void controlEvent(ControlEvent ev)
           coinNo = selectCoins(1);
           if (coinNo == 0)
           {
-            if (MegBoxYN("Do you really want to share 0 coins?", "Confirm") == 0)
+            if (MegBoxYN("Do you really want to share 0 coins?", "Confirm") <= 0)
             {
               doNotDraw = false;
               return;
@@ -139,7 +139,7 @@ void controlEvent(ControlEvent ev)
           //coinNo = selectCoins(2);
           //if (coinNo == 0)
           //{
-          if (MegBoxYN("Do you want to return coins?", "Confirm") == 1)
+          if (MegBoxYN("Do you want to return coins?\nClosing will be considered as returning 0 coins.", "Confirm") == 1)
             m.getCoinsReturnedByOpponent(allcoins);
           else 
           //}
@@ -186,7 +186,7 @@ int MegBoxYN(String Msg, String Title)
   } else if (response == JOptionPane.YES_OPTION) {
     return 1;
   } else if (response == JOptionPane.CLOSED_OPTION) {
-    return 1;
+    return -1;
   }
   return 2;
 }

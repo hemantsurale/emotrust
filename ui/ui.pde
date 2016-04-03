@@ -219,7 +219,7 @@ void paintCanvas()
 
   textSize(35);
 
-  text("Your coins " + howManyCoinsSelected() , (int)(50 + displayWidth * 0.15), 
+  text("Your coins " + (10 - howManyCoinsSelected()) , (int)(50 + displayWidth * 0.15), 
     (int)(displayHeight * 0.71) - 30);
 
   if (state == 0)
@@ -228,13 +228,13 @@ void paintCanvas()
     {
       sayIt(3);
       textSize(40);
-      text("Round " + m.getCurrentRound() + ": "
-        + instruction[state], displayWidth * 0.25, displayHeight * 0.25);
+      text("Round " + m.getCurrentRound() + " "
+        , displayWidth * 0.25, displayHeight * 0.25); //+ instruction[state]
     } 
     else
     {
       textSize(40);
-      text("Round " + m.getCurrentRound() + ": " 
+      text("Round " + m.getCurrentRound() + " " 
         + instruction[state], displayWidth * 0.25, displayHeight * 0.25); 
       if(m.getCurrentRound() != part1Rounds + 1)
         sayIt(state);
@@ -243,7 +243,7 @@ void paintCanvas()
   else
   {
     textSize(40);
-    text("Round " + m.getCurrentRound() + ": "
+    text("Round " + m.getCurrentRound() + " "
       + instruction[state], displayWidth * 0.25, displayHeight * 0.25); 
     sayIt(state);
   }
@@ -274,8 +274,8 @@ void initCanvas()
   e = new Emotion[20];
   be = new Emotion[20];
   instruction = new String[10];
-  instruction[0] = "Select Coins";
-  instruction[1] = "Select Emotion";
+  instruction[0] = " "; // "Select Coins";
+  instruction[1] = " "; //"Select Emotion";
   instruction[2] = "Part 1: Share coins and then emotions.";
   instruction[3] = "Part 2: Coins returned by opponent will double in value.";
 
@@ -388,7 +388,8 @@ void displayInstructions(int when)
       "\t\nStep 2: Exchange emotions with the opponent.", 
       width * 0.1, height * 0.2);
     text("\t\n\nPart 2:  \t\n\nStep 1: Exchange coins with the opponent." +
-      "\t\nStep 2: Select coins to be returned to the opponent, returned coins double in value." +
+      "\t\nStep 2: Select coins to be returned to the opponent, returned coins double in value," +
+      "\t\nand coins that are not returned to the opponent do not belong to either of the player." +
       "\t\nStep 3: Exchange emotions with the opponent.", 
       width * 0.1, height * 0.4);
     fill(255, 0, 0);
@@ -436,6 +437,7 @@ void displayInstructions(int when)
     // Add instructions before start of the game.
     text("\t\n\nPart 2:  \t\n\nStep 1: Exchange coins with the opponent." +
       "\t\nStep 2: Select coins to be returned to the opponent, returned coins double in value." +
+      "\t\nand coins that are not returned to the opponent do not belong to either of the player." +
       "\t\nStep 3: Exchange emotions with the opponent.", 
       width * 0.1, height * 0.4);
     fill(255, 0, 0);
