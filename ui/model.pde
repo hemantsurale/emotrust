@@ -123,8 +123,8 @@ public class model {
       score[0]+= coinsSent[1]; // score of participant
       score[1]+= coinsSent[0] ; // score of computer
     } else {
-      score[0]+= 10 - coinsSent[0] + 2*coinsReturned[1];
-      score[1]+= 10 - coinsSent[1] + 2*coinsReturned[0];
+      score[0] = score[0]+ (10 - coinsSent[0]) + 2*coinsReturned[1];
+      score[1] = score[1] + (10 - coinsSent[1]) + 2*coinsReturned[0];
     }
 
     println("Score Participant: " + score[0] + " Score Computer " + score[1]);
@@ -250,7 +250,7 @@ public class model {
       tentativeScore[0] = score[0]+ 2*coinsSent[0] + 10 - coinsSent[0];
       tentativeScore[1] = score[1] + 10 - coinsSent[1];
     }
-    println("Tentative Scores P, C "+ tentativeScore[0]+" "+ tentativeScore[0]);
+    println("Tentative Scores P, C "+ tentativeScore[0]+" "+ tentativeScore[1]);
     if (float(tentativeScore[0]) < tentativeScore[1]) coinsReturned[1] = coinsSent[0];
     else coinsReturned[1] = 0;
 
