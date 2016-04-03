@@ -11,6 +11,8 @@ void sayIt(int index)
      msg = minim.loadFile("data/nextpart.mp3");
    else if (index == 3)
      msg = minim.loadFile("data/ReturnDecision.mp3");
+   else if (index == 4)
+     msg = minim.loadFile("data/continue.mp3");
    msg.play();
    delay(10);
    sayOnce = false;
