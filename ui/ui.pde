@@ -219,6 +219,7 @@ void paintCanvas()
 
   textSize(35);
 
+  text("Your coins " + (10 - howManyCoinsSelected()) , (int)(50 + displayWidth * 0.15), 
     (int)(displayHeight * 0.71) - 30);
 
   if (state == 0)
