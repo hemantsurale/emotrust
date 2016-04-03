@@ -8,6 +8,7 @@ Button send_b, round_2;
 float send_b_x, button_y, salt;    // salt is used to control the position as needed
 boolean doNotDraw = false, round2Begins = false, round2InstructionShown = false;
 int temp1, allcoins;
+int whichPart;
 
 void setupButton()
 {
@@ -46,7 +47,7 @@ void controlEvent(ControlEvent ev)
       //send_b.lock();
       if (!emo_selected)
       {
-        MsgBox("Did you forget Emoji?", "Error!!");
+        MsgBox("Did you forget Emotion?", "Error!!");
         state = 1;              // if emoji is not selected go back to the same state.
         return;
       } else
@@ -74,17 +75,18 @@ void controlEvent(ControlEvent ev)
       m.log();
 
       doNotDraw = true;
-      time = ceil(random(1, 5));
+      time = ceil(random(1, 8));
     }
 
     if ( state == 0)                            // state 0: send coins to the opponent.
     {
       // start the white out screen.
       doNotDraw = true;
-      time = ceil(random(1, 5));
+      time = ceil(random(1, 8));
 
       if (m.getCurrentRound() <= part1Rounds)
       {
+        m.part = 1;
         coinNo = selectCoins(1);
         if (coinNo == 0)
         {
@@ -107,6 +109,7 @@ void controlEvent(ControlEvent ev)
         state = 1;
       } else if ( m.getCurrentRound() <= totalRounds)
       {
+        m.part = 2;
         if (interaction_no == 0)
         {
           println("interaction 1");
@@ -287,4 +290,15 @@ void lockAllBC(boolean flag)
 {
   for (j = 0; j < 10; j++)
     bc[j].lockUnlock(flag);
+}
+
+int howManyCoinsSelected()
+{
+  int coins = 0;
+  for (j = 0; j < 10; j++)
+    if (c[j].isSelected())  
+    {
+      coins++;
+    }
+  return coins;
 }

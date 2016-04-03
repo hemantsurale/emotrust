@@ -66,7 +66,7 @@ void draw()
         if (m.getCurrentRound() == part1Rounds + 1 && round2InstructionShown == false)
         {
           send_b.hide();
-          //lockAllBC(true);
+          sayIt(4);
           lockAllOwn(true);
           round_2.show();
         }
@@ -219,7 +219,7 @@ void paintCanvas()
 
   textSize(35);
 
-  text("Your coins", (int)(50 + displayWidth * 0.15), 
+  text("Your coins " + howManyCoinsSelected() , (int)(50 + displayWidth * 0.15), 
     (int)(displayHeight * 0.71) - 30);
 
   if (state == 0)
@@ -230,14 +230,17 @@ void paintCanvas()
       textSize(40);
       text("Round " + m.getCurrentRound() + ": "
         + instruction[state], displayWidth * 0.25, displayHeight * 0.25);
-    } else
+    } 
+    else
     {
       textSize(40);
       text("Round " + m.getCurrentRound() + ": " 
         + instruction[state], displayWidth * 0.25, displayHeight * 0.25); 
-      sayIt(state);
+      if(m.getCurrentRound() != part1Rounds + 1)
+        sayIt(state);
     }
-  } else
+  }
+  else
   {
     textSize(40);
     text("Round " + m.getCurrentRound() + ": "
@@ -451,6 +454,7 @@ void displayInstructions(int when)
         round_2.hide();
         round2InstructionShown = true;
         lockAllOwn(false);
+        sayIt(0);
       }
     when = 0;
   }

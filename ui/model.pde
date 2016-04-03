@@ -1,5 +1,6 @@
 import java.io.FileWriter;
 import java.io.BufferedWriter;
+import java.util.Random;
 
 public class model {
   /* *VERY IMPORTANT*
@@ -9,6 +10,7 @@ public class model {
 
   private Table log = new Table();
   public int round;
+  public int part;
   public int computerEmojiIndex;
   public int[] score= new int[2];
   public int coinsSentPreviousRound; // coins sent by the oppoenet in previous round
@@ -32,6 +34,7 @@ public class model {
      }
      //output = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
      */
+    part = 1;
     round = 1;
 
     for (int i=0; i<2; i++) {
@@ -119,12 +122,12 @@ public class model {
    */
   public void updateScore() {
 
-    if (round<=10) {
+    if (part == 1) {
       score[0]+= coinsSent[1]; // score of participant
       score[1]+= coinsSent[0] ; // score of computer
     } else {
-      score[0] = score[0]+ (10 - coinsSent[0]) + 2*coinsReturned[1];
-      score[1] = score[1] + (10 - coinsSent[1]) + 2*coinsReturned[0];
+      score[0] = score[0] + 2*coinsReturned[1] + (10 - coinsSent[0]) ; 
+      score[1] = score[1] + 2*coinsReturned[0] + (10 - coinsSent[1]) ;
     }
 
     println("Score Participant: " + score[0] + " Score Computer " + score[1]);
@@ -194,7 +197,7 @@ public class model {
   }
 
   int sendEmoToOpponent() {
-    if (round<11) return EmojiFromComputer(1);
+    if (part == 1) return EmojiFromComputer(1);
     else return EmojiFromComputer(2);
   }
 
@@ -241,20 +244,26 @@ public class model {
    This is for part 2
    this function will determine the number of coins to return
    */
+  //private int determineNumCoinReturn() {
+  //  int[] tentativeScore= new int[2];
+  //  if (coinsReturnedLastRound) { // if coins were returned in last round
+  //    tentativeScore[0] = score[0] + 10 + coinsSent[0]; // + 2*coinsReturned[1]
+  //    tentativeScore[1] = score[1] + 10 + coinsSent[1];
+  //  } else {
+  //    tentativeScore[0] = score[0]+ 2*coinsSent[0] + 10 - coinsSent[0];
+  //    tentativeScore[1] = score[1] + 10 - coinsSent[1];
+  //  }
+  //  println("Tentative Scores P, C "+ tentativeScore[0]+" "+ tentativeScore[1]);
+  //  if (float(tentativeScore[0]) < tentativeScore[1]) coinsReturned[1] = coinsSent[0];
+  //  else coinsReturned[1] = 0;
+  //  return coinsReturned[1];
+  //}
   private int determineNumCoinReturn() {
-    int[] tentativeScore= new int[2];
-    if (coinsReturnedLastRound) { // if coins were returned in last round
-      tentativeScore[0] = score[0]+ 2*coinsReturned[1] + 10 - coinsSent[0];
-      tentativeScore[1] = score[1]+ 2*coinsReturned[0] + 10 - coinsSent[1];
+    if ((0 + (int)(Math.random() * ((1 - 0) + 1))) == 1) { // if coins were returned in last round
+       coinsReturned[1] = coinsSent[0];
     } else {
-      tentativeScore[0] = score[0]+ 2*coinsSent[0] + 10 - coinsSent[0];
-      tentativeScore[1] = score[1] + 10 - coinsSent[1];
+      coinsReturned[1] = 0;
     }
-    println("Tentative Scores P, C "+ tentativeScore[0]+" "+ tentativeScore[1]);
-    if (float(tentativeScore[0]) < tentativeScore[1]) coinsReturned[1] = coinsSent[0];
-    else coinsReturned[1] = 0;
-
-
     return coinsReturned[1];
   }
 }
