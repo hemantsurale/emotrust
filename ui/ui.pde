@@ -38,7 +38,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(1, 5);    // part1Rounds, totalRounds.
+  initRounds(1, 2);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = ceil(random(1, 5));            // screen white out time, after player has sent the coins.
@@ -219,7 +219,7 @@ void paintCanvas()
 
   textSize(35);
 
-  text("Remaining coins with you " + (10 - howManyCoinsSelected()) , (int)(50 + displayWidth * 0.15), 
+  text("Remaining coins with you " + (10 - howManyCoinsSelected()), (int)(50 + displayWidth * 0.15), 
     (int)(displayHeight * 0.71) - 30);
 
   if (state == 0)
@@ -230,17 +230,15 @@ void paintCanvas()
       textSize(40);
       text("Round " + m.getCurrentRound() + " "
         , displayWidth * 0.25, displayHeight * 0.25); //+ instruction[state]
-    } 
-    else
+    } else
     {
       textSize(40);
       text("Round " + m.getCurrentRound() + " " 
         + instruction[state], displayWidth * 0.25, displayHeight * 0.25); 
-      if(m.getCurrentRound() != part1Rounds + 1)
+      if (m.getCurrentRound() != part1Rounds + 1)
         sayIt(state);
     }
-  }
-  else
+  } else
   {
     textSize(40);
     text("Round " + m.getCurrentRound() + " "
@@ -412,7 +410,11 @@ void displayInstructions(int when)
     background(0);
     stroke(#00ff00);
     fill(255, 255, 255);
+    textSize(50);
     // Add instructions before start of the game.
+    text("\t\n\nYour Score: " + m.score[0] + "\t                      Opponent Score: "  + m.score[1], 
+      width * 0.1, height * 0.1);
+    textSize(35);
     text("\t\n\nThank you for participating in the study.\nWait for further instructions.", 
       width * 0.1, height * 0.4);
     fill(255, 0, 0);
@@ -423,6 +425,7 @@ void displayInstructions(int when)
     if (keyPressed)
       if (key == ' ') {
         send_b.show();
+        m.writeFileToDisk();
         exit();
       }
     when = 0;

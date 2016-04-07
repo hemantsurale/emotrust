@@ -45,6 +45,10 @@ void controlEvent(ControlEvent ev)
         }
       state = 2;
       //send_b.lock();
+      m.getEmotionFromOpponent(emojiId - 1);
+      println("Participants emotions", emojiId - 1);
+      m.log();
+      
       if (!emo_selected)
       {
         MsgBox("Did you forget Emotion?", "Error!!");
@@ -72,7 +76,7 @@ void controlEvent(ControlEvent ev)
       Ereceived = temp1;
       println("Eid:" + temp1);
       interaction_no = 0;
-      m.log();
+ 
 
       doNotDraw = true;
       time = ceil(random(1, 8));
@@ -139,7 +143,7 @@ void controlEvent(ControlEvent ev)
           //coinNo = selectCoins(2);
           //if (coinNo == 0)
           //{
-          if (MegBoxYN("Do you want to return coins?\nClosing will be considered as returning 0 coins.", "Confirm") == 1)
+          if (MegBoxYN("Do you want to return coins?\nClosing this prompt will result in not returning any coins.", "Confirm") == 1)
             m.getCoinsReturnedByOpponent(allcoins);
           else 
           //}

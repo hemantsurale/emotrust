@@ -19,11 +19,11 @@ public class model {
   public int[] coinsReturned = new int[2]; //coinsReturned[0] -> number of coins returned BY opponent, [1]-> coins returned BY Computer
   private boolean coinsReturnedLastRound ; // did opponent return coins in last round?
   private int[]emoji = new int[2]; // keeps track of the emoji
-  private String filename = ""; /************ NEED TO SET THIS **************/
+  private String filename = "/log/log.csv"; /************ NEED TO SET THIS **************/
   private boolean TFT; // this variable specifies whther the current execution is in Tit for tat mode or random mode, need a way to set this.
   private boolean consistentEmotion; // consistent or inconsistent emotions, need a way to set all these flags while running.
   private boolean dissapointmentOverAnger; // this is to control dissapointment/anger
-
+  private String[] emoSet = {"Happy", "Guilty", "Moderately Angry", "Very Angry", "Moderately Dissapointed", "Very Dissapointed"};
 
   public model() {
     //create logger
@@ -50,12 +50,14 @@ public class model {
     log.addColumn("coinsSentByParticipant");
     log.addColumn("coinsSentByComputer");
     log.addColumn("coinsReturnedByParticipant");
-    log.addColumn("coinsReturned[1]");
+    log.addColumn("coinsReturnedByComputer");
     log.addColumn("emojiSentByParticipant");
     log.addColumn("emojiSentByComputer");
     log.addColumn("TFT?");
     log.addColumn("Consistent Emotion?");
     log.addColumn("Disappointment?");
+    log.addColumn("ComputerScore");
+    log.addColumn("ParticipantScore");
   }
 
 
@@ -64,17 +66,20 @@ public class model {
     roundInfo.setInt("round", round);
     roundInfo.setInt("coinsSentByParticipant", coinsSent[0]);
     roundInfo.setInt("coinsSentByComputer", coinsSent[1] );
-    roundInfo.setInt("coinsReturnedByParticipant", coinsSent[0]);
-    roundInfo.setInt("coinsReturned[1]", coinsSent[1] );
-    roundInfo.setInt("emojiSentByParticipant", emoji[0]);
-    roundInfo.setInt("emojiSentByComputer", emoji[1] );
+    roundInfo.setInt("coinsReturnedByParticipant", coinsReturned[0]);
+    roundInfo.setInt("coinsReturnedByComputer", coinsReturned[1] );
+    roundInfo.setString("emojiSentByParticipant", emoSet[emoji[0]]);
+    roundInfo.setString("emojiSentByComputer", emoSet[emoji[1]] );
     roundInfo.setString("TFT?", str(TFT));
     roundInfo.setString("Consistent Emotion?", str(consistentEmotion) );
     roundInfo.setString("Disappointment?", str(dissapointmentOverAnger));
+    roundInfo.setInt("ComputerScore", score[1] );
+    roundInfo.setInt("ParticipantScore", score[0]);
+  }
 
-    if (round==20) {
-      saveTable(log, filename); // Change according to folder structure or whatever!
-    }
+  void writeFileToDisk()
+  {
+    saveTable(log, filename); // Change according to folder structure or whatever!
   }
   /**
    * Creates a new file including all subfolders
@@ -260,10 +265,15 @@ public class model {
   //}
   private int determineNumCoinReturn() {
     if ((0 + (int)(Math.random() * ((1 - 0) + 1))) == 1) { // if coins were returned in last round
-       coinsReturned[1] = coinsSent[0];
+      coinsReturned[1] = coinsSent[0];
     } else {
       coinsReturned[1] = 0;
     }
     return coinsReturned[1];
+  }
+
+  private void getEmotionFromOpponent(int emoId)
+  {
+    emoji[0] = emoId;
   }
 }
