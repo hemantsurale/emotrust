@@ -19,7 +19,7 @@ public class model {
   public int[] coinsReturned = new int[2]; //coinsReturned[0] -> number of coins returned BY opponent, [1]-> coins returned BY Computer
   private boolean coinsReturnedLastRound ; // did opponent return coins in last round?
   private int[]emoji = new int[2]; // keeps track of the emoji
-  private String filename = "/log/log.csv"; /************ NEED TO SET THIS **************/
+  private String filename = "/data/log.csv"; /************ NEED TO SET THIS **************/
   private boolean TFT; // this variable specifies whther the current execution is in Tit for tat mode or random mode, need a way to set this.
   private boolean consistentEmotion; // consistent or inconsistent emotions, need a way to set all these flags while running.
   private boolean dissapointmentOverAnger; // this is to control dissapointment/anger
@@ -175,10 +175,14 @@ public class model {
         computerEmojiIndex = int (random(6));
       }
     } else { //part 2
-      if (coinsReturned[0]==0) {
+      if (coinsReturned[0]==0 && coinsReturned[1]!=0) {// P not return, C return
         if (dissapointmentOverAnger) computerEmojiIndex = 2;
         else computerEmojiIndex = 4;
-      } else {
+      } else if (coinsReturned[0]!=0 && coinsReturned[1]==0) { // P return, C not return
+         computerEmojiIndex = 1;
+      } else if (coinsReturned[0]==0 && coinsReturned[1]==0) { // Both not return
+         computerEmojiIndex = 1;
+      }else { // Both Return
         computerEmojiIndex = 0;
       }
     }
@@ -272,8 +276,7 @@ public class model {
     return coinsReturned[1];
   }
 
-  private void getEmotionFromOpponent(int emoId)
-  {
+  private void getEmotionFromOpponent(int emoId) {
     emoji[0] = emoId;
   }
 }
