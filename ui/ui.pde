@@ -348,17 +348,10 @@ void changeSetting()
     m.TFT = m.consistentEmotion = m.dissapointmentOverAnger = false;
     if ( tft != 0)
       m.TFT = true;
-    else
-      m.TFT = false;
     if ( cemotion != 0)
       m.consistentEmotion = true;
-    else
-      m.consistentEmotion = false;
     if ( dovera != 0)
       m.dissapointmentOverAnger = true;
-    else
-      m.dissapointmentOverAnger = false;
-      
   } else 
   println("Settings Not Found!!");
 }
