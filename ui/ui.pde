@@ -1,4 +1,4 @@
-/*  //<>//
+/*  //<>// //<>//
  Affective computing project.
  Team - Shikha, Edmund, Hemant
  */
@@ -38,7 +38,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(1, 2);    // part1Rounds, totalRounds.
+  initRounds(10, 20);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = ceil(random(1, 5));            // screen white out time, after player has sent the coins.
