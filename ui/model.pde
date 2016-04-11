@@ -19,21 +19,14 @@ public class model {
   public int[] coinsReturned = new int[2]; //coinsReturned[0] -> number of coins returned BY opponent, [1]-> coins returned BY Computer
   private boolean coinsReturnedLastRound ; // did opponent return coins in last round?
   private int[]emoji = new int[2]; // keeps track of the emoji
-  private String filename = "/data/log.csv"; /************ NEED TO SET THIS **************/
+  private String filename = "./data/log.csv"; /************ NEED TO SET THIS **************/
   private boolean TFT; // this variable specifies whther the current execution is in Tit for tat mode or random mode, need a way to set this.
   private boolean consistentEmotion; // consistent or inconsistent emotions, need a way to set all these flags while running.
-  private boolean dissapointmentOverAnger; // this is to control dissapointment/anger
-  private String[] emoSet = {"Happy", "Guilty", "Moderately Angry", "Very Angry", "Moderately Dissapointed", "Very Dissapointed"};
+  private boolean anger; // this is to control dissapointment/anger
+  private String[] emoSet = {"Happy", "Guilty", "Angry", "Furious", "Dissapointed", "Very Upset"};
 
   public model() {
-    //create logger
-    /*
-    File f = new File(dataPath(filename));
-     if (!f.exists()) {
-     createFile(f);
-     }
-     //output = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
-     */
+ 
     part = 1;
     round = 1;
 
@@ -55,7 +48,7 @@ public class model {
     log.addColumn("emojiSentByComputer");
     log.addColumn("TFT?");
     log.addColumn("Consistent Emotion?");
-    log.addColumn("Disappointment?");
+    log.addColumn("Anger?"); //0 -> Disappointment, 1-> Anger
     log.addColumn("ComputerScore");
     log.addColumn("ParticipantScore");
   }
@@ -72,29 +65,15 @@ public class model {
     roundInfo.setString("emojiSentByComputer", emoSet[emoji[1]] );
     roundInfo.setString("TFT?", str(TFT));
     roundInfo.setString("Consistent Emotion?", str(consistentEmotion) );
-    roundInfo.setString("Disappointment?", str(dissapointmentOverAnger));
+    roundInfo.setString("Anger?", str(anger));
     roundInfo.setInt("ComputerScore", score[1] );
     roundInfo.setInt("ParticipantScore", score[0]);
   }
 
-  void writeFileToDisk()
-  {
+  void writeFileToDisk(){
     saveTable(log, filename); // Change according to folder structure or whatever!
   }
-  /**
-   * Creates a new file including all subfolders
-   I DONT KNOW WHETHER I NEED TO DO THIS, so I just commented it for now.
-   private void createFile(File f) {
-   File parentDir = f.getParentFile();
-   try {
-   parentDir.mkdirs();
-   f.createNewFile();
-   }
-   catch(Exception e) {
-   e.printStackTrace();
-   }
-   }
-   */
+  
   private void resetCoinInfo() {
     for (int i=0; i<2; i++) {
       coinsSent[i]=0;
@@ -165,25 +144,29 @@ public class model {
         if (difference>=-2 && difference<=0) computerEmojiIndex = 0; // happy
         else if (difference<-2) computerEmojiIndex = 1; // guilty
         else if (difference<=3 && difference>0) { // moderate anger or dissapointment
-          if (dissapointmentOverAnger) computerEmojiIndex = 2;
+          if (anger) computerEmojiIndex = 2;
           else computerEmojiIndex = 4;
         } else if (difference>3) { // intense anger or dissapointment
-          if (dissapointmentOverAnger) computerEmojiIndex = 3;
+          if (anger) computerEmojiIndex = 3;
           else computerEmojiIndex = 5;
         }
       } else { // inconsistent(random) emotions
         computerEmojiIndex = int (random(6));
       }
     } else { //part 2
-      if (coinsReturned[0]==0 && coinsReturned[1]!=0) {// P not return, C return
-        if (dissapointmentOverAnger) computerEmojiIndex = 2;
-        else computerEmojiIndex = 4;
-      } else if (coinsReturned[0]!=0 && coinsReturned[1]==0) { // P return, C not return
-         computerEmojiIndex = 1;
-      } else if (coinsReturned[0]==0 && coinsReturned[1]==0) { // Both not return
-         computerEmojiIndex = 1;
-      }else { // Both Return
-        computerEmojiIndex = 0;
+      if (consistentEmotion) {
+        if (coinsReturned[0]==0 && coinsReturned[1]!=0) {// P not return, C return
+          if (anger) computerEmojiIndex = 2;
+          else computerEmojiIndex = 4;
+        } else if (coinsReturned[0]!=0 && coinsReturned[1]==0) { // P return, C not return
+          computerEmojiIndex = 1;
+        } else if (coinsReturned[0]==0 && coinsReturned[1]==0) { // Both not return
+          computerEmojiIndex = 1;
+        } else { // Both Return
+          computerEmojiIndex = 0;
+        }
+      } else {
+        computerEmojiIndex = int (random(6));
       }
     }
     emoji[1]= computerEmojiIndex;
@@ -249,24 +232,6 @@ public class model {
     return coinsSent[1];
   }
 
-  /*
-   This is for part 2
-   this function will determine the number of coins to return
-   */
-  //private int determineNumCoinReturn() {
-  //  int[] tentativeScore= new int[2];
-  //  if (coinsReturnedLastRound) { // if coins were returned in last round
-  //    tentativeScore[0] = score[0] + 10 + coinsSent[0]; // + 2*coinsReturned[1]
-  //    tentativeScore[1] = score[1] + 10 + coinsSent[1];
-  //  } else {
-  //    tentativeScore[0] = score[0]+ 2*coinsSent[0] + 10 - coinsSent[0];
-  //    tentativeScore[1] = score[1] + 10 - coinsSent[1];
-  //  }
-  //  println("Tentative Scores P, C "+ tentativeScore[0]+" "+ tentativeScore[1]);
-  //  if (float(tentativeScore[0]) < tentativeScore[1]) coinsReturned[1] = coinsSent[0];
-  //  else coinsReturned[1] = 0;
-  //  return coinsReturned[1];
-  //}
   private int determineNumCoinReturn() {
     if ((0 + (int)(Math.random() * ((1 - 0) + 1))) == 1) { // if coins were returned in last round
       coinsReturned[1] = coinsSent[0];

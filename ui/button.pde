@@ -47,17 +47,16 @@ void controlEvent(ControlEvent ev)
       //send_b.lock();
       m.getEmotionFromOpponent(emojiId - 1);
       println("Participants emotions", emojiId - 1);
-      m.log();
-      
+
       if (!emo_selected)
       {
         MsgBox("Did you forget Emotion?", "Error!!");
         state = 1;              // if emoji is not selected go back to the same state.
         return;
-      } else
-      {
+      } else {
         if (m.getCurrentRound() <= totalRounds)
         {
+          m.log();
           nextRound = true;
           m.increaseRound();
         }
@@ -76,7 +75,7 @@ void controlEvent(ControlEvent ev)
       Ereceived = temp1;
       println("Eid:" + temp1);
       interaction_no = 0;
- 
+
 
       doNotDraw = true;
       time = ceil(random(1, 8));

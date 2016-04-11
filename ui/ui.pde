@@ -1,4 +1,4 @@
-/*  //<>// //<>//
+/*  //<>// //<>// //<>//
  Affective computing project.
  Team - Shikha, Edmund, Hemant
  */
@@ -38,7 +38,7 @@ void setup()
 {
   setupButton();       // initialize button parameters.
   initCanvas();        // setting up the coins and emoji panel.
-  initRounds(10, 20);    // part1Rounds, totalRounds.
+  initRounds( 10, 20);    // part1Rounds, totalRounds.
   minim = new Minim(this);  // initialization of sound.
   fullScreen();      
   time = ceil(random(1, 5));            // screen white out time, after player has sent the coins.
@@ -345,13 +345,10 @@ void changeSetting()
     tft = Integer.parseInt(list[0]);
     cemotion = Integer.parseInt(list[1]);
     dovera = Integer.parseInt(list[2]);
-    m.TFT = m.consistentEmotion = m.dissapointmentOverAnger = false;
-    if ( tft != 0)
-      m.TFT = true;
-    if ( cemotion != 0)
-      m.consistentEmotion = true;
-    if ( dovera != 0)
-      m.dissapointmentOverAnger = true;
+    m.TFT = m.consistentEmotion = m.anger = false;
+    if ( tft == 1) m.TFT = true;
+    if ( cemotion == 1) m.consistentEmotion = true;
+    if ( dovera == 1)m.anger = true;
   } else 
   println("Settings Not Found!!");
 }
